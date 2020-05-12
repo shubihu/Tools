@@ -1,0 +1,4 @@
+python_docx==0.8.10
+pywin32==227
+pandas==1.0.1
+click==7.1.1

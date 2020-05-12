@@ -33,6 +33,7 @@ ws2.append(title)
 def url(journal, terms):
 	if journal == 1:
 		url = f'https://onlinelibrary.wiley.com/action/doSearch?AfterYear=2020&AllField={terms}&BeforeYear=2020&SeriesKey=1365313x&content=articlesChapters&countTerms=true&target=default&startPage=0&sortBy=Earliest'
+			    # https://onlinelibrary.wiley.com/action/doSearch?AfterYear=2020&AllField={terms}&BeforeYear=2020&SeriesKey=1365313x&content=articlesChapters&countTerms=true&sortBy=Earliest&startPage=1&target=default&pageSize=20
 		return url
 	elif journal == 2:
 		url0 = f'http://www.plantphysiol.org/search/{terms}%20jcode%3Aplantphysiol%7C%7Cplantcell%20numresults%3A'

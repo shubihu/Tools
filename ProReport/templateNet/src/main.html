@@ -1,0 +1,1231 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>16S生物信息学分析报告</title>
+	<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon"/>
+
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	<link href="js/fancybox/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+	<link href="css/main.css?v=20200226a" rel="stylesheet" type="text/css" />
+
+	<script src="js/jquery-2.2.4.min.js"></script>
+	<script src="js/fancybox/jquery.fancybox.min.js"></script>
+	<script src="js/main.js?v=20200226a"></script>
+
+	<style>
+		.fancybox-stage{
+			max-width: 96%;
+			max-height: 96%;
+			margin: 2% auto;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!--<header class="header">
+		<div class="logo">
+			<a href="http://www.aptbiotech.com/" target = "_blank"><img src = "img/logo_wite.png" alt = ""/></a>
+		</div>
+
+		<div class="nav">
+			<a href="http://www.aptbiotech.com/" target="_blank">公司官网</a>
+			<a href="http://cloud.aptbiotech.com/#/main-page" target="_blank">生信云平台</a>
+			<a href="http://www.aptbiotech.com/" target="_blank">帮助和支持</a>
+		</div>
+	</header>-->
+
+
+	<section id="main">
+		<div class="menu">
+			<div class="menu-box">
+				<ul class="menu-ul">
+					<li class="toHtml"><a class="link-a" href="#name1">1. 项目概述<span>SUMMARY</span></a></li>
+					<li class="toHtml"><a class="link-a" href="#name2">2. 分析流程<span>FLOWCHART</span></a></li>
+
+					<li class="toHtml menu-has-sub menu-open">
+						<a class="menu-ul-a" href= "#name3">3. 分析结果<span>DATA ANALYSIS</span></a>
+						<ul class="menu-sub">
+							<li class="toHtml"><a class="link-a" href="#name3">3.1 测序数据质控统计</a></li>
+							<!-- <li class="toHtml"><a class="link-a" href="#name3">3.1.1 鉴定与定量结果统计</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.1.2">3.1.2 修饰位点分布分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.1.3">3.1.3 韦恩图分析</a></li> -->
+							<li class="toHtml"><a class="link-a" href="#name3.2">3.2 OTU分析和物种注释</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.2">3.2.1 OTU聚类和物种注释</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.2.2">3.2.2 基于OTU分布的Venn图</a></li>
+							<!-- <li class="toHtml"><a class="link-a" href="#name3.2.3">3.2.3 聚类分析</a></li> -->
+							<li class="toHtml"><a class="link-a" href="#name3.3">3.3 物种组成分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.3">3.3.1 单样本多级物种组成图</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.3.2">3.3.2 特定物种分类树</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.3.3">3.3.3 群落结构组分图</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.3.4">3.3.4 UPGMA聚类树</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.3.5">3.3.5 群落Heatmap图</a></li>
+							<!-- <li class="toHtml"><a class="link-a" href="#name3.3.6">3.3.6 蛋白互作网络分析</a></li> -->
+							<li class="toHtml"><a class="link-a" href="#name3.4">3.4 α多样性分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4">3.4.1 α多样性指数</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4.2">3.4.2 Rarefaction Curve</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4.3">3.4.3 Shannon</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4.4">3.4.4 Rank-Abundance</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4.5">3.4.5 Specaccum</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.4.6">3.4.6 α多样性指数组间差异分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.5">3.5 β多样性分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.5">3.5.1 β多样性指数组间差异分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.5.2">3.5.2 PCA分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.5.3">3.5.3 PCoA分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.5.4">3.5.4 NMDS分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.6">3.6 组间群落结构差异显著性检验</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.6">3.6.1 Anosim</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.6.2">3.6.2 Adonis</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.7">3.7 组间差异物种分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.7">3.7.1 LEfSe分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.7.2">3.7.2 STAMP差异分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8">3.8 功能预测</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8">3.8.1 KEGG功能预测</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.2">3.8.2 COG功能预测</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.3">3.8.3 PCA分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.4">3.8.4 功能分布组分图</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.5">3.8.5 功能分布Heatmap图</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.6">3.8.6 差异功能LEfSe分析</a></li>
+							<li class="toHtml"><a class="link-a" href="#name3.8.7">3.8.7 差异功能STAMP分析</a></li>
+						</ul>
+					</li>
+
+					<li class="toHtml menu-has-sub menu-open">
+						<a class="menu-ul-a" href="#name4">4. 材料和方法<span>MATERIALS AND METHODS</span></a>
+						<ul class="menu-sub">
+							<li class="toHtml"><a class="link-a" href="#name4">4.1 实验方法</a></li>
+							<li class="toHtml"><a class="link-a" href="#name4">4.1.1 DNA的提取与检测</a></li>
+							<li class="toHtml"><a class="link-a" href="#name4.1.2">4.1.2 PCR扩增</a></li>
+							<li class="toHtml"><a class="link-a" href="#name4.1.3">4.1.3 扩增产物纯化</a></li>
+							<li class="toHtml"><a class="link-a" href="#name4.1.4">4.1.4 扩增产物荧光定量</a></li>
+							<li class="toHtml"><a class="link-a" href="#name4.1.5">4.1.5 文库构建和上机测序</a></li>							
+						</ul>
+					</li>
+
+					<li class="toHtml menu-has-sub menu-open">
+						<a class="menu-ul-a" href="#name5">5. 分析方法（英文模板）<span>QUALITY CONTROL AND INTRODUCTION</span></a>
+						<ul class="menu-sub">
+							<li class="toHtml"><a class="link-a" href="#name5">5.1 Sequencing</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.1.1">5.1.1 Extraction of genome DNA</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.1.2">5.1.2 Amplicon Generation</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.1.3">5.1.3 PCR Products quantification and qualification</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.1.4">5.1.4 PCR Products Mixing and Purification</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.1.5">5.1.5 Library preparation and sequencing</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.2">5.2 Data analysis</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.2.1">5.2.1 Paired-end reads assemblies</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.2.2">5.2.2 OTU cluster and Species annotation</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.2.3">5.2.3 Phylogenics distance and community distribution</a></li>
+							<li class="toHtml"><a class="link-a" href="#name5.2.4">5.2.4 Statistical analysis</a></li>
+						</ul>
+					</li>
+
+					<li class="toHtml"><a class="link-a" id="a_name6" href="#name6">6. 参考文献<span>References</span></a></li>
+					<li class="toHtml"><a class="link-a" id="a_name7" href="#name7">7. 自助数据分析云平台<span>DATA ANALYSIS PLATFORM</span></a></li>
+
+					<li class="toHtml menu-has-sub menu-open">
+						<a class="menu-ul-a" href="#name8">8. 拓展研究建议(供参考)<span>Research suggestions</span></a>
+						<ul class="menu-sub">
+							<li class="toHtml"><a class="link-a" href="#name8.1">8.1 测序数据是否合格</a></li>
+							<li class="toHtml"><a class="link-a" href="#name8.2">8.2 了解各组内的菌群组成情况</a></li>
+							<li class="toHtml"><a class="link-a" href="#name8.3">8.3 判断各样本整体上的差异情况</a></li>
+							<li class="toHtml"><a class="link-a" href="#name8.4">8.4 差异分组间具体有哪些物种差异</a></li>
+							<li class="toHtml"><a class="link-a" href="#name8.5">8.5 通过菌群信息进行功能预测</a></li>
+						</ul>
+					</li>
+
+					<li class="toHtml"><a class="link-a" href="#name9">9. 组学期刊投稿指南(供参考)<span>Publication recommendation</span></a></li>
+					<li class="toHtml"><a class="link-a" href="#name10">10. 部分合作发表文章<span>Cooperative Projects Papers</span></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class = "content" style="overflow: visible;">
+
+			<div class="page-cover">
+				<div class="cover-p1">
+					<img src="img/cover.jpg" width="100%">
+					<!--<div class="t1">质谱系统解决方案领航者</div>-->
+					<!--<div class="t2">蛋白质组项目报告</div>-->
+					<div class="cover-p2">
+						<div class="cover-info-title">
+							16S rDNA 扩增子测序<br>
+							生物信息学分析报告
+						</div>
+						<div class="cover-info">
+							<table align="center" style="width: auto">
+								<tr><td>项目名称：<span></span></td></tr>
+								<tr><td>委托单位：<span></span></td></tr>
+								<tr><td>项目编号：<span></span></td></tr>
+								<tr><td>报告时间：<span></span></td></tr>
+							</table>
+						</div>
+					</div>
+					<img src="img/p1.jpg" width="90%" style="text-align: center; margin: 0 auto;">
+				</div>
+			</div>
+
+			<div id="name1">
+				<h1><span>1. 项目概述 Summary</span></h1>
+				<div class="p">本项目采用Illumina Miseq测序平台对V3-V4可变区进行扩增和测序，具体项目结果概览如下表。</div>
+				<div class="p">数据结果下载：<a href="报告及附件/1项目鉴定总览/" target="_blank">1项目鉴定总览</a>。</div>
+				<div class="p1"><center>项目结果总览表</center></div>
+				<div>
+					<table class="table">
+						<tr>
+							<th colspan="2">样本类型</th>
+						</tr>
+						<tr>
+							<td><b>物种</b></td>
+							<td width="50%"><b>样本状态</b></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+				<br/>
+				<div>
+					<table class="table">
+						<tr>
+							<th colspan="2">样本组别</th>
+						</tr>
+					</table>
+				</div>
+				<br/>
+			</div>
+
+			<div id="name2">
+				<h1><span>2. 分析流程 Flowchart</span></h1>
+				<div class="p">本项目分析流程主要包括测序实验与数据分析两个阶段。</div>
+				<div class="p">测序实验分析流程主要包括DNA提取提取与检测、PCR扩增、扩增产物纯化、扩增产物荧光定量、文库制备、上机测序等步骤，见下图。</div>
+				<div style="margin-top:20px;text-align:center;"><img src= "img/flowchart.png" width = "600" height = "80"/></div>
+				<div class="p1"><center>16S rDNA测序实验流程图</center></div>
+				<div class="p">随后对测序数据进行预处理、质控统计与生物信息学分析，分析内容主要包括OTU物种分析、多样性分析、差异分析、功能预测等，见下图。</div>
+				<div class="fancybox" style="margin-top:20px;text-align:center;">
+					<a href="img/bioinformatics.png" data-fancybox="" data-type="image"><img src= "img/bioinformatics.png" width = "600" height = "550"/></a></div>
+				<div class="p1"><center>数据质控与生物信息学分析内容</center></div>
+			</div>
+
+			<div id="name3">
+				<h1><span>3. 分析结果 Data analysis</span></h1>
+				<h2>3.1 测序数据质控统计</h2>
+				<!-- <h3>3.1.1 鉴定与定量结果统计</h3> -->
+				<div class="p">根据barcode序列区分各个样本的数据，提取出的数据以fastq格式保存，PE数据每个样本有fq1和fq2两个文件，分别为测序两端的reads，序列按顺序一一对应。</div>
+				<div class="p">
+				Fastq：Fastq是Solexa测序技术中一种反映测序序列的碱基质量的文件格式。每条read包含4行信息，其中第一行和第三行由文件识别标志和读段名（ID）组成（
+				第一行以“@”开头，第三行以“+” 开头；第三行中 ID可以省略，但“+”不能省略），第二行为碱基序列，第四行是第二行的序列中每个碱基所对应的测序质量值。</div>
+				<div class="p">如下所示：</div>
+				<div class="p">@HWI-ST531R:144:D11RDACXX:4:1101:1212:1946 1:N:0:ATTCCT</div>
+				<div class="p">ATNATGACTCAAGCGCTTCCTCAGTTTAATGAAGCTAACTTCAATGCTGAGATCGTTGACGACATCGAATGGG</div>
+				<div class="p">+ HWI-ST531R:144:D11RDACXX:4:1101:1212:1946 1:N:0:ATTCCT</div>
+				<div class="p">?A#AFFDFFHGFFHJJGIJJJIICHIIIIJJGGHIIJJIIJIIJIHGI@FEHIIJBFFHGJJIIHHHDFFFFDCCCCEDDCDDCDEACC</div>
+				<div class="p">将测序得到的下机数据（Raw PE）进行拼接、质控及去嵌合体，得到Clean PE。数据处理过程中各步骤得到的统计结果见下表。</div>
+				<div class="dowload">
+					<div class="shuchu">数据结果下载:</div>
+					<div><a href="报告及附件/3-1质控数据统计分析/" target = "_blank">3-1质控数据统计分析\质控统计</a></div>
+				</div>
+				<div class="p1"><center>质控数据统计分析结果</center></div>
+				<div>
+					<table>
+						<!-- <tr>
+							<th colspan="2" style="background-color: #fff">PhosphoSites</th>
+							<th colspan="2" style="background-color: #fff">PhosphoPeptides</th>
+							<th colspan="2" style="background-color: #fff">PhosphoProteins</th>
+						</tr> -->
+						<tr>
+							<td style="background-color:#B9D3EE">Sample ID</td>
+							<td style="background-color: #EE9A49">Raw PE</td>
+							<td style="background-color: #EE9A49">Clean PE</td>
+							<td style="background-color: #EE9A49">Base(nt)</td>
+							<td style="background-color: #EE9A49">AvgLen(nt)</td>
+							<td style="background-color: #EE9A49">Q20(%)</td>
+							<td style="background-color: #EE9A49">Q30(%)</td>
+							<td style="background-color: #EE9A49">GC(%)</td>
+							<td style="background-color: #EE9A49">Effective(%)</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			
+			<div id="name3.2">
+				<h2>3.2 OTU分析和物种注释</h2>
+				<h3>3.2.1 OTU聚类和物种注释</h3>
+				<div class="p">为了研究样品的物种组成多样性，对所有样品的Clean reads进行聚类，以97%的一致性将序列聚类成为OTUs（Operational Taxonomic Units），然后对OTUs的代表序列进行物种注释。注释用的数据库为greengenes，注释结果示例见下表。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-2OTU分析和物种注释/3-2-1OTU聚类和物种注释/" target = "_blank">3-2OTU分析和物种注释/3-2-1OTU聚类和物种注释</a></div>
+				</div>
+				<div class="p1"><center>OTU and Taxonomy</center></div>
+				<div>
+					<table>
+						<tr><td style="background-color: #B9D3EE">OTU ID</td>
+							<td style="background-color: #FFC1C1">A1</td>
+							<td style="background-color: #FFC1C1">A2</td>
+							<td style="background-color: #FFC1C1">A3</td>
+							<td style="background-color: #FFC1C1">taxonomy</td></tr>
+					</table>
+				</div>
+				<div class="p1 explain">注：由于数据表较大，此处以图例形式列出部分数据，详见对应文件otu_table_tax.csv。OTU ID 为OTU编号；第二列至taxonomy列的前一列为各样本的序列在各个OTU中的分布情况。taxonomy列拉开可查看分类学系谱信息。各级分类水平以“；”隔开，分类学名称前的单个字母为分类等级的首字母缩写，以“__”隔开。</div>
+			</div>
+			<div id="name3.2.2">
+				<h3>3.2.2 基于OTU分布的Venn图</h3>
+				<div class="p">根据OTUs聚类分析结果和研究需求，分析不同样品（组）之间共有、特有的OTUs，当样本（组）数小于5时，绘制成韦恩图（Venn Graph），当样本（组）数大于5时，绘制成花瓣图。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-2OTU分析和物种注释/3-2-2基于OTU分布的Venn图/" target = "_blank">3-2OTU分析和物种注释/3-2-2基于OTU分布的Venn图</a></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>基于OTU分布的Venn图</center></div>
+				</div>
+				<div class="p1 explain">注：不同的颜色代表不同的样本（组），如果两个不同颜色圆圈重叠的区域标注有数字100，说明这两个样本（组）均有序列被划分入相同的OTU中，且这样的OTU有100个。</div>
+			</div>
+			
+			<div id="name3.3">
+				<h2>3.3 物种组成分析</h2>
+				<h3>3.3.1 单样本多级物种组成图</h3>
+				<div class="p">为了更直观展示各样品在不同分类水平的丰度情况，我们利用Krona软件</sup>[4]对</sup>单样品物种注释结果及丰度进行动态可视化展示。一个样品，做一张图，示例如图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-3物种组成分析/3-3-1单样本多级物种组成图/" target = "_blank">3-3物种组成分析/3-3-1单样本多级物种组成图</a></div>
+				</div>
+				<div class="p1"><center>物种注释结果KRONA展示</center></div>
+			</div>
+			<div id="name3.3.2">
+				<h3>3.3.2 特定物种分类树</h3>
+				<div class="p">对每个样品或分组的物种注释结果，筛选特别关注的物种（默认选择最大相对丰度前10的属）进行物种分类树统计</sup>[5]，</sup>其中单个样品的物种分类树和分组的物种分类树见下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">数据结果下载:</div>
+					<div><a href="报告及附件/3-3物种组成分析/3-3-2特定物种分类树/" target = "_blank">1)&nbsp;&nbsp;3-3物种组成分析/3-3-2 特定物种分类树</a></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>单样品特定物种分类树</center></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>分组特定物种分类树</center></div>
+				</div>
+				<div class="p1 explain">注：单样品特定物种分类树中不同颜色的圆圈表示分类水平，对应左侧图例；大小代表相丰度大小。分组特定物种分类树中圆圈不同颜色的扇形表示分组，对应左侧图例；大小表示在分类上相对丰度的比例大小。圆圈下的数字，第一个表示只比对到该分类（不能比对到该分类等级以下的分类水平）的序列数，第二个数字表示共有多少序列比对到该分类。</div>
+			</div>
+			<div id="name3.3.3">
+				<h3>3.3.3 群落结构组分图</h3>
+				<div class="p">群落结构组分图可以展示每个样本或分组在不同分类水平上的群落结构。根据物种注释结果，选取每个样品或分组在各分类水平（Phylum、Class、Order、Family、Genus、Species）上最大丰度排名前10的物种，生成物种相对丰度柱形累加图，以便直观查看在不同分类水平上，相对丰度较高的物种及其比例。以门水平为例，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-3物种组成分析/3-3-3群落结构组分图/" target = "_blank">3-3物种组成分析/3-3-3 群落结构组分图</a></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>各样品物种相对丰度柱状图</center></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>各分组物种相对丰度柱状图</center></div>
+				</div>
+				<div class="p1 explain">注：不同颜色代谢不同的物种，对应右侧图例；横轴代表不同的样本或分组，纵轴代表不同物种的相对丰度。</div>
+			</div>
+			<div id="name3.3.4">
+				<h3>3.3.4 UPGMA聚类树</h3>
+				<div class="p">为了研究不同样品间的相似性，可以通过对样品进行聚类分析，构建样品的聚类树。在环境生物学中，UPGMA（Unweighted Pair-group Method with Arithmetic Mean）是一种较为常用的聚类分析方法，是最早用来解决分类问题的分析方法。</div>
+				<div class="p">UPGMA 的基本思想是：首先将距离最小的2个样品聚在一起，并形成一个新的节点（新的样品），其分支点位于2个样品间距离的1/2 处；然后计算新的“样品”与其它样品间的平均距离，再找出其中的最小2个样品进行聚类；如此反复，直到所有的样品都聚到一起，最终得到一个完整的聚类树。</div>
+				<div class="p">基于Weighted Unifrac距离矩阵和Unweighted Unifrac距离矩阵做UPGMA聚类分析，并将聚类结果与各样品在门水平上的群落结构柱状图整合展示，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-3物种组成分析/3-3-4UPGMA聚类树/" target = "_blank">3-3物种组成分析/3-3-4 UPGMA聚类树</a></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>UPGMA聚类树及群落结构柱状图</center></div>
+				<div class="p1 explain">注：左边是样本间基于群落组成的层次聚类分析，右边是各样本在门水平的群落结构柱状图。Unweighted Unifrac距离是基于微生物序列间的进化信息计算得到的</sup>[6,7</sup>]，而Weighted Unifrac距离是基于微生物序列间的进化信息和OTUs的丰度信息计算得到的</sup>[8]。</sup></div>
+			</div>
+			<div id="name3.3.5">
+				<h3>3.3.5 群落Heatmap图</h3> 
+				<div class="p">Heatmap可以用颜色变化来反映二维矩阵或表格中的数据信息，它可以直观地将数据值的大小以定义的颜色深浅表示出来。根据物种注释结果，在各分类水平（Phylum、 Class、 Order、 Family、 Genus、Species）上进行物种层面的聚类，将聚类后数据表示在heatmap图上，便于直观发现哪些物种在哪些样品或分组中聚集较多或聚集较少。以门水平为例，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-3物种组成分析/3-3-5群落Heatmap图/" target = "_blank">3-3物种组成分析/3-3-5群落Heatmap图</a></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>各样品物种丰度聚类热图</center></div>
+				</div>
+				<div class = "albumSlider">
+					<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					<div>
+						<center>
+							<table class="checkgroup" style="width: 40%">
+								<tr></tr>
+							</table>
+						</center>
+					</div>
+					<div class="p1"><center>各分组物种丰度聚类热图</center></div>
+				</div>
+				<div class="p1 explain">注：横轴表示不同的样本，纵轴表示不同的物种，颜色的深浅与物种的丰度有关，颜色越深，丰度越高。</div>
+			</div>
+			<div id="name3.4">
+				<h2>3.4 α多样性分析</h2>
+				<h3>3.4.1 α多样性指数</h3>
+				<div class="p">Alpha Diversity 用于分析样品内（Within-community）的微生物群落多样性。各样品的α多样性指数见下表。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-1α多样性指数/" target = "_blank">3-4α多样性分析/3-4-1α多样性指数</a></div>
+				</div>
+				<div class="p1"><center>α 多样性指数</center></div>
+				<div>
+					<table>
+						<tr><td width="20%" rowspan="2" style="background-color: #B9D3EE"><b>Sample ID</b></td><td width="80%" colspan="7" style="background-color: #6CA6CD"><b>0.97</b></td></tr>
+						<tr><td style="background-color: #FFC1C1">Shannon</td>
+							<td style="background-color: #FFC1C1">Simpson</td>
+							<td style="background-color: #FFC1C1">ACE</td>
+							<td style="background-color: #FFC1C1">Coverage</td>
+							<td style="background-color: #FFC1C1">Chao1</td>
+							<td style="background-color: #FFC1C1">Observed Species</td>
+							<td style="background-color: #FFC1C1">PD_whole_tree</td>
+						</tr>
+					</table>
+				</div>
+				<div class="p1 explain">注：Observed Species为OTU数目；Shannon和Simpson为菌群多样性指数；Chao 1 和ACE为菌群丰度指数；Coverage为测序深度指数；PD_whole_tree为系统发育多样性指数。</div>
+			</div>
+			<div id="name3.4.2">
+				<h3>3.4.2 Rarefaction Curve</h3> 
+				<div class="p">Rarefaction Curve是从样品中随机抽取一定测序量的数据，统计它们所代表物种数目，以抽取的测序数据量与对应的物种数来构建曲线，结果如图8所示。稀释曲线可直接反映测序数据量的合理性，间接反映样品中物种的丰富程度。当曲线趋向平坦时，说明测序数据量合理，更多的数据量只会产生少量新的OTU，反之则表明继续测序还可能产生较多新的OTU。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-2RarefactionCurve/" target = "_blank">3-4α多样性分析/3-4-2RarefactionCurve</a></div>
+				</div>
+				<div class = "fullview" alt = ""><a href="报告及附件/3-4α多样性分析/3-4-2RarefactionCurve/RarefactionCurve.png"><img src="报告及附件/3-4α多样性分析/3-4-2RarefactionCurve/RarefactionCurve.png" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<center>
+							<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-2RarefactionCurve/RarefactionCurve.png"/></td></tr>
+					</center>
+				</div>
+				<div class="p1"><center>Rarefaction Curve</center></div>
+				<div class="p1 explain">注：横坐标：随机抽取的测序数据量；纵坐标：观测到的OTU数量。</div>
+			</div>
+			<div id="name3.4.3">
+				<h3>3.4.3 Shannon</h3> 
+				<div class="p">Shannon曲线是根据各样本的测序量在不同测序深度时的微生物多样性指数来构建曲线，结果如图9所示。当曲线趋向平坦时，说明测序数据量足够大，可以反映样本中绝大多数的微生物信息。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-3Shannon/" target = "_blank">3-4α多样性分析/3-4-3Shannon</a></div>
+				</div>
+				<div class = "fullview" alt = ""><a href="报告及附件/3-4α多样性分析/3-4-3Shannon/Shannon.png"><img src="报告及附件/3-4α多样性分析/3-4-3Shannon/Shannon.png" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<center>
+							<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-3Shannon/Shannon.png"/></td></tr>
+					</center>
+				</div>
+				<div class="p1"><center>Shannon</center></div>
+				<div class="p1 explain">注：横坐标：随机抽取的测序数据量；纵坐标：Shannon指数</div>
+			</div>
+			<div id="name3.4.4">
+				<h3>3.4.4 Rank-Abundance</h3> 
+				<div class="p">Rank-abundance曲线可用来解释多样性的两个方面，即物种丰度和物种均匀度，结果如图10所示。在水平方向，物种的丰度由曲线的宽度来反映，物种的丰度越高，曲线在横轴上的范围越大；曲线的形状（平滑程度）反映了样本中物种的均度，曲线越平缓，物种分布越均匀</sup>[9]。</sup></div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-4Rank-Abundance/" target = "_blank">3-4α多样性分析/3-4-4Rank-Abundance</a></div>
+				</div>
+				<div class = "fullview" alt = ""><a href="报告及附件/3-4α多样性分析/3-4-4Rank-Abundance/Rank-Abundance.png"><img src="报告及附件/3-4α多样性分析/3-4-4Rank-Abundance/Rank-Abundance.png" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<center>
+							<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-4Rank-Abundance/Rank-Abundance.png"/></td></tr>
+					</center>
+				</div>
+				<div class="p1"><center>Rank-Abundance</center></div>
+				<div class="p1 explain">注：横坐标：OTU等级，横坐标轴上数字，例如“200”代表样本中按照丰度排列第200位的OUT，“400”代表样本中按照丰度排列第400位的OUT，依次类推；纵坐标：该等级OTU中序列数的相对百分含量，即属于该OTU的序列数除以总序列数，纵坐标轴上数字，例如“100”代表相对丰度为100%，“10”代表相对丰度为10%，依次类推。</div>
+			</div>
+			<div id="name3.4.5">
+				<h3>3.4.5 Specaccum</h3> 
+				<div class="p">物种累积曲线(Species Accumulation Curves)是描述随着样本量的增加物种多样性增加的分析，是调查样本的物种组成和预测样本中物种丰度的有效工具，在生物多样性和群落调查中，被广泛用于样本量是否充分的判断以及物种丰富度(Species Richness)的估计。因此，通过物种累积箱形图不仅可以判断样本量是否充分，在样本量充分的前提下，运用物种累积箱形图还可以对物种丰富度进行预测（默认在样本量大于10个时分析）。结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-5Specaccum/" target = "_blank">3-4α多样性分析/3-4-5Specaccum</a></div>
+				</div>
+				<div class = "fullview" alt = ""><a href="报告及附件/3-4α多样性分析/3-4-5Specaccum/Specaccum.png"><img src="报告及附件/3-4α多样性分析/3-4-5Specaccum/Specaccum.png" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<center>
+							<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-5Specaccum/Specaccum.png"/></td></tr>
+					</center>
+				</div>
+				<div class="p1"><center>Species Accumulation Curves</center></div>
+				<div class="p1 explain">注：横坐标为样本量；纵坐标为抽样后 OTU 数目。结果反映了持续抽样下新 OTU（新物种）出现的速率。在一定范围内，随着样本量的加大，若箱形图位置表现为急剧上升则表示群落中有大量物种被发现；当箱形图位置趋于平缓，则表示此环境中的物种并不会随样本量的增加而显著增多。物种累积箱形图可以作为对样本量是否充分的判断,箱形图位置急剧上升表明样本量不足，需要增加抽样量；反之，则表明抽样充分，可以进行数据分析。</div>
+			</div>
+			<div id="name3.4.6">
+				<h3>3.4.6 α多样性指数组间差异分析</h3> 
+				<div class="p">α多样性指数组间差异分析中，箱形图可以直观的反应组内物种多样性的中位数、离散程度、最大值、最小值、异常值。同时，通过T-test检验，wilcox秩和检验和Tukey检验（当数据呈正态分布时，只有2个分组时选用T-test，分组大于2时进行Tukey检验，当数据不呈正态分布时选用wilcox）分析组间物种多样性差异是否显著。组间差异分析的箱形图如下图所示：</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/" target = "_blank">3-4α多样性分析/3-4-6α多样性指数组间差异分析</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/observed_species.png" data-fancybox data-type="image"><img src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/observed_species.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr>
+										<td style="text-align: center;background-color: cornflowerblue">Observed Species<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/observed_species.png"/></td>
+										<td style="text-align: center">Shannon<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/shannon.png"/></td>
+										<td style="text-align: center">Simpson<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/simpson.png"/></td>
+										<td style="text-align: center">Chao1<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/chao1.png"/></td>
+										<td style="text-align: center">ACE<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/ace.png"/></td>
+										<td style="text-align: center">Coverage<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/goods_coverage.png"/></td>
+										<td style="text-align: center">PD_whole_tree<br/><img style="height: 60px;width: 60px" src="报告及附件/3-4α多样性分析/3-4-6α多样性指数组间差异分析/PD_whole_tree.png"/></td>
+									</tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>α多样性指数组间差异箱形图</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：图中第一四分位数(Q1)，又称“下四分位数”，等于该样本中所有数值由小到大排列后第25%的数字。第二四分位数(Q2)，又称“中位数”，等于该样本中所有数值由小到大排列后第50%的数字。 第三四分位数(Q3)，又称“上四分位数”，等于该样本中所有数值由小到大排列后第75%的数字。</div>
+			</div>
+			<div id="name3.5">
+				<h2>3.5 β多样性分析</h2>
+				<h3>3.5.1 β多样性指数组间差异分析</h3>
+				<div class="p">β多样性指数组间差异分析中，箱形图可以直观的反应组内物种多样性的中位数、离散程度、最大值、最小值、异常值。同时，通过T-test检验，wilcox秩和检验和Tukey检验（当数据呈正态分布时，只有2个分组时选用T-test，分组大于2时进行Tukey检验，当数据不呈正态分布时选用wilcox）分析组间物种多样性差异是否显著。基于Weighted Unifrac 和Unweighted UnifracBeta距离的β多样性组间差异分析的结果如图13所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-5β多样性分析/3-5-1β多样性指数组间差异分析/" target = "_blank">3-5β多样性分析/3-5-1β多样性指数组间差异分析</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-5β多样性分析/3-5-1β多样性指数组间差异分析/weighted_unifrac/weighted_unifrac.png" data-fancybox data-type="image"><img src="报告及附件/3-5β多样性分析/3-5-1β多样性指数组间差异分析/weighted_unifrac/weighted_unifrac.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr><td style="text-align: center;background-color: cornflowerblue">Weighted Unifrac<br/><img style="height: 60px;width: 60px" src="报告及附件/3-5β多样性分析/3-5-1β多样性指数组间差异分析/weighted_unifrac/weighted_unifrac.png"/></td>
+										<td style="text-align: center">Unweighted Unifrac<br/><img style="height: 60px;width: 60px" src="报告及附件/3-5β多样性分析/3-5-1β多样性指数组间差异分析/unweighted_unifrac/unweighted_unifrac.png"/></td></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>α多样性指数组间差异箱形图</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：图中第一四分位数(Q1)，又称“下四分位数”，等于该样本中所有数值由小到大排列后第25%的数字。第二四分位数(Q2)，又称“中位数”，等于该样本中所有数值由小到大排列后第50%的数字。 第三四分位数(Q3)，又称“上四分位数”，等于该样本中所有数值由小到大排列后第75%的数字。</div>
+			</div>
+			<div id="name3.5.2">
+				<h3>3.5.2 PCA分析</h3> 
+				<div class="p">主成分分析PC(A，Principal Component Analysis)，是一种对数据进行简化分析的技术，对多维数据进行降维，从而提取出数据中最主要的元素和结构的方法</sup>[10]</sup>。应用PCA分析，能够提取出最大程度反映样品间差异的两个坐标轴，从而将多维数据的差异反映在二维坐标图上，进而揭示复杂数据背景下的简单规律。样品的群落组成越相似，则它们在PCA图中的距离越接近。PCA分析结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-5β多样性分析/3-5-2PCA/" target = "_blank">3-5β多样性分析/3-5-2PCA</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+						<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>PCA</center></div>
+					</div>
+					<div class="p1 explain">注：横坐标表示第一主成分，纵坐标表示第二主成分，百分比表示对样品差异的贡献值。</div>
+				</div>
+			</div>
+			<div id="name3.5.3">
+				<h3>3.5.3 PCoA分析</h3> 
+				<div class="p">主坐标分析（PCoA，Principal Co-ordinates Analysis），与PCA分析类似，用来研究样本群落组成的相似性或差异性。如果样品距离越接近，表示物种组成结构越相似，因此群落结构相似度高的样品倾向于聚集在一起，群落差异很大的样品则会远远分开。与PCA分析的不同点在于：PCA是基于OUT丰度表的欧式距离进行分析，PCoA则是基于Weighted Unifrac 和Unweighted UnifracBeta距离进行分析。PCoA 分析结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-5β多样性分析/3-5-3PCoA/" target = "_blank">3-5β多样性分析/3-5-3PCoA</a></div>
+				</div>
+				<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<div class = "albumSlider">
+						<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+					</div>
+					<div class="p1"><center>基于Weighted Unifrac 距离的PCoA分析</center></div>
+					<!-- <div class="p1 explain">注：横坐标表示第一主成分，纵坐标表示第二主成分，百分比表示对样品差异的贡献值。</div> -->
+				</div>
+				<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+				<div>
+					<div class = "albumSlider">
+						<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+					</div>
+					<div class="p1"><center>基于Uneighted Unifrac 距离的PCoA分析</center></div>
+					<div class="p1 explain">注：横坐标表示第一主成分，纵坐标表示第二主成分，百分比表示对样品差异的贡献值。</div>
+				</div>
+			</div>
+			<div id="name3.5.4">
+				<h3>3.5.4 NMDS分析</h3> 
+				<div class="p">非度量多维尺度法（NMDS，Non-Metric Multi-Dimensional Scaling）统计是一种适用于生态学研究的排序方法。NMDS是非线性模型，其设计目的是为了克服线性模型（包括PCA、 PCoA）的缺点，更好地反映生态学数据的非线性结构</sup>[11]</sup>。</div>
+				<div class="p">应用NMDS分析，根据样本中包含的物种信息，以点的形式反映在多维空间上，而对不同样本间的差异程度，则是通过点与点间的距离体现，能够反映样本的组间和组内差异等。NMDS分析结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-5β多样性分析/3-5-4NMDS/" target = "_blank">3-5β多样性分析/3-5-2NMDS</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+						<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>NMDS</center></div>
+					</div>
+					<div class="p1 explain">注：每个点表示一个样品，点与点之间的距离表示差异程度，同一个组的样品使用同一种颜色表示。</div>
+				</div>
+			</div>
+			<div id="name3.6">
+				<h2>3.6 组间群落结构差异显著性检验</h2>
+				<h3>3.6.1 Anosim</h3>
+				<div class="p">Anosim分析是一种非参数检验，基于Bray-Curtis算法，检验组间的差异是否显著大于组内差异，从而判断分组是否有意义，分析结果如下表所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-6组间群落结构差异显著性检验/3-6-1Anosim/" target = "_blank">3-6组间群落结构差异显著性检验/3-6-1Anosim</a></div>
+				</div>
+				<div class="p1"><center>Anosim 分析</center></div>
+				<div>
+					<table>
+						<tr><td style="background-color: #B9D3EE">Group</td>
+							<td style="background-color: #FFC1C1">R-value</td>
+							<td style="background-color: #FFC1C1">P-value</td>
+						</tr>
+					</table>
+				</div>
+				<div class="p1 explain">注：R值介于（-1，1）之间，R值大于0，说明组间差异显著。R值小于0，说明组内差异大于组间差异，统计分析的可信度用 P-value 表示，P< 0.05 表示统计具有显著性。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-6组间群落结构差异显著性检验/3-6-1Anosim/" target = "_blank">3-6组间群落结构差异显著性检验/3-6-1Anosim</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Anosim组间差异</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：横坐标：Between为两组之间的结果，其他两个为各自组内的结果。纵坐标为样品间距离的秩。</div>
+			</div>
+			<div id="name3.6.2">
+				<h3>3.6.2 Adonis</h3>
+				<div class="p">Adonis又称置换多因素方差分析（permutational MANOVA）或非参数多因素方差分析（nonparametric MANOVA）。该方法可分析不同分组因素对样品差异的解释度，并使用置换检验对分组的统计学意义进行显著性分析</sup>[12,</sup>13,14,15]，分析结果如下表所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-6组间群落结构差异显著性检验/3-6-2Adonis/" target = "_blank">3-6组间群落结构差异显著性检验/3-6-1Adonis</a></div>
+				</div>
+				<div class="p1"><center>Adonis 分析</center></div>
+				<div>
+					<table>
+						<tr><td style="background-color: #B9D3EE">Group</td>
+							<td style="background-color: #FFC1C1">R2-value</td>
+							<td style="background-color: #FFC1C1">P-value</td>
+						</tr>
+					</table>
+				</div>
+				<div class="p1 explain">注：R2 表示不同分组对样品差异的解释度，即分组方差与总方差的比值，R2 越大表示分组对差异的解释度越高；P 值小于0.05 说明本次检验的可信度高。</div>
+			</div>
+			<div id="name3.7">
+				<h2>3.7 组间差异物种分析</h2>
+				<h3>3.7.1 LEfSe</h3>
+				<div class="p">LEfSe(LDA Effect Size)是一种用于发现高维生物标识和揭示基因组特征的软件。包括基因，代谢和分类，用于区别两个或两个以上生物条件（或者是类群）。该算法强调的是统计意义和生物相关性，让研究人员能够识别不同丰度的特征以及相关联的类别。</div>
+				<div class="p">LEfSe分析根据分类学组成对样本按照不同的分组条件进行线型判别分析（LDA），找出对样本划分产生显著性差异影响的群落或物种</sup>[16]</sup>。LEfSe的分析结果如下图所示，包括进化分支图（系统发育分布）,LDA值分布柱状图和组间具有统计学差异的Biomarker在不同组中丰度比较图。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-7组间差异物种分析/3-7-1LefSe" target = "_blank">3-7组间差异物种分析/3-7-1LefSe</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Cladogram</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：进化分支图中由内至外辐射的圆圈代表了由门至属（或种）的分类级别。在不同分类级别上的每一个小圆圈代表该水平下的一个分类，小圆圈直径大小与相对丰度大小呈正比。红色区域和绿色区域表示不同分组，树枝中红色节点表示在红色组别中起到重要作用的微生物类群，绿色节点表示在绿色组别中起到重要作用的微生物类群，黄色节点表示的是在两组中均没有起到重要作用的微生物类群。图中英文字母表示的物种名称在右侧图例中进行展示。</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>LDA Score</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：LDA值分布柱状图中红色区域和绿色区域表示不同分组，树枝中红色节点表示在红色组别中起到重要作用的微生物类群，绿色节点表示在绿色组别中起到重要作用的微生物类群。图中仅展示了LDA Score大于设定值（默认设置为2）的物种，柱状图的长度代表LDA值的大小。图中英文字母表示的物种名称在右侧图例中进行展示。</div>
+				<div class="p">默认LDA值大于2的物种为组间具有统计学差异的Biomarker。各Biomarker在不同组中丰度比较图详见附件，示例如下图所示。</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Biomarker在各组样品中的相对丰度</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：图中左右两侧表示不同的组别。横坐标表示样本，纵坐标表示菌的相对丰度。</div>
+			</div>
+			<div id="name3.7.2">
+				<h3>3.7.2 STAMP</h3>
+				<div class="p">STAMP差异分析用于比较两组样品（Welch’s t-test 分析）或多组样品（ANOVA 分析，该软件只出Pvalue，无图片展示）之间物种的丰度，通过此分析可获得显著性差异物种。在属水平上的STAMP差异分析结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-7组间差异物种分析/3-7-2STAMP" target = "_blank">3-7组间差异物种分析/3-7-2STAMP</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Plot STAMP</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：左图所示为不同物种在两个样品或者两组样品中的丰度比例，中间所示为95%置信度区间内的差异比例，最右边的值为p值，p值＜0.05，表示差异显著。</div>
+			</div>
+			<div id="name3.8">
+				<h2>3.8 功能预测</h2>
+				<h3>3.8.1 KEGG功能预测</h3>
+				<div class="p">使用PICRUSt软件通过比对16S测序数据获得的物种组成信息，推测样本中的功能基因组成，从而分析不同样本或分组之间在功能上的差异。</div>
+				<div class="p">KEGG功能预测分析是研究群落样本为适应环境变化发生的代谢功能改变的有效手段。KEGG功能预测结果见下表。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/" target = "_blank">3-8功能预测/KEGG</a></div>
+				</div>
+				<div class="p1"><center>KEGG功能预测结果</center></div>
+				<div>
+					<table>
+						<tr></tr>
+					</table>
+				</div>
+			</div>
+			<div id="name3.8.2">
+				<h3>3.8.2 COG功能预测</h3>
+				<div class="p">COG即原核生物同源蛋白簇数据库，是原核生物常用的蛋白功能分类数据库，与KEGG互补，更为全面揭示菌群的功能组成。COG功能预测结果见下表。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/" target = "_blank">3-8功能预测/COG</a></div>
+				</div>
+				<div class="p1"><center>COG功能预测结果</center></div>
+				<div>
+					<table>
+						<tr></tr>
+					</table>
+				</div>
+			</div>
+			<div id="name3.8.3">
+				<h3>3.8.3 PCA分析</h3>
+				<div class="p">PCA分析是在整体层面上揭示不同组别的菌群功能的相似度或差异性。在PCA图中的距离越接近，反映样品的群落功能越相似。对KEGG和COG功能预测结果进行PCA分析，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/PCA" target = "_blank">3-8功能预测/KEGG/PCA</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>KEGG功能PCA分析</center></div>
+					</div>
+				</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/PCA" target = "_blank">3-8功能预测/COG/PCA</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>COG功能PCA分析</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：横坐标表示第一主成分，纵坐标表示第二主成分，百分比表示对样品差异的贡献值。</div>
+			</div>
+			<div id="name3.8.4">
+				<h3>3.8.4 功能分布组分图</h3>
+				<div class="p">群落结构组分图可以展示每个样本或分组的功能组成及相对丰度。分别选择TOP 10的KEGG和COG功能条目，生成相对丰度柱形累加图，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/Barplot" target = "_blank">3-8功能预测/KEGG/Barplot</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-8功能预测/KEGG/Barplot/kegg_predicted_L2.png" data-fancybox data-type="image"><img src="报告及附件/3-8功能预测/KEGG/Barplot/kegg_predicted_L2.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-8功能预测/KEGG/Barplot/kegg_predicted_L2.png"/></td>
+									</tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>KEGG功能条目相对丰度柱状图</center></div>
+					</div>
+				</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/Barplot" target = "_blank">3-8功能预测/COG/Barplot</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-8功能预测/COG/Barplot/cog_predicted_L2.png" data-fancybox data-type="image"><img src="报告及附件/3-8功能预测/COG/Barplot/cog_predicted_L2.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-8功能预测/COG/Barplot/cog_predicted_L2.png"/></td>
+									</tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>COG功能条目相对丰度柱状图</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：不同颜色代谢不同的功能条目，对应右侧图例；横轴代表不同的样本或分组，纵轴代表各功能条目的相对丰度。</div>
+			</div>
+			<div id="name3.8.5">
+				<h3>3.8.5 功能分布热图</h3>
+				<div class="p">Heatmap可以用颜色变化来反映二维矩阵或表格中的数据信息，可以直观的将功能丰度值用定义的颜色深浅表示出来。对KEGG和COG功能预测结果进行Heatmap分析，结果如图22-1和22-2所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/Heatmap" target = "_blank">3-8功能预测/KEGG/Heatmap</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-8功能预测/KEGG/Heatmap/kegg_predicted_L2.png" data-fancybox data-type="image"><img src="报告及附件/3-8功能预测/KEGG/Heatmap/kegg_predicted_L2.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-8功能预测/KEGG/Heatmap/kegg_predicted_L2.png"/></td>
+									</tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>KEGG热图分析</center></div>
+					</div>
+				</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/Heatmap" target = "_blank">3-8功能预测/COG/Heatmap</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = "1"><a href="报告及附件/3-8功能预测/COG/Heatmap/cog_predicted_L2.png" data-fancybox data-type="image"><img src="报告及附件/3-8功能预测/COG/Heatmap/cog_predicted_L2.png" alt = "" style="width:600px;" /></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr><td style="text-align: center;background-color: cornflowerblue"><br/><img style="height: 60px;width: 60px" src="报告及附件/3-8功能预测/COG/Heatmap/cog_predicted_L2.png"/></td>
+									</tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>COG热图分析</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：不同颜色代谢不同的功能条目，对应右侧图例；横轴代表不同的样本或分组，纵轴代表各功能条目的相对丰度。</div>
+			</div>
+			<div id="name3.8.6">
+				<h3>3.8.6 差异功能LEfSe分析</h3>
+				<div class="p">LEfSe分析根据分类学组成对样本按照不同的分组条件进行线型判别分析（LDA），找出对样本划分产生显著性差异影响的功能条目。</div>
+				<div class="p">(1)KEGG</div>
+				<div class="p">基于KEGG功能预测的LEfSe分析结果如下图所示，包括LDA值分布柱状图和组间具有统计学差异的功能条目在不同组中丰度比较图。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/LEfSe" target = "_blank">3-8功能预测/KEGG/LEfSe</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>LDA Score</center></div>
+					</div>
+				<div class="p1 explain">注：LDA值分布柱状图中红色区域和绿色区域表示不同分组，红色表示在红色组别中起到重要作用的功能条目，绿色表示在绿色组别中起到重要作用的功能条目。图中仅展示了LDA Score大于设定值（默认设置为2）的功能条目，柱状图的长度代表LDA值的大小。</div>
+				</div>
+				<div class="p">默认LDA值大于2为组间具有统计学差异的功能条目。各功能条目在不同组中丰度比较图详见附件，示例如下图所示。</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>差异功能在各组样品中的相对丰度</center></div>
+					</div>
+				<div class="p1 explain">注：图中左右两侧表示不同的组别。横坐标表示样本，纵坐标表示功能条目的相对丰度。</div>
+				</div>
+				<div class="p">(2)COG</div>
+				<div class="p">基于COG功能预测的LEfSe分析结果如图24所示，包括LDA值分布柱状图和组间具有统计学差异的功能条目在不同组中丰度比较图，如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/LEfSe" target = "_blank">3-8功能预测/COG/LEfSe</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>LDA Score</center></div>
+					</div>
+				<div class="p1 explain">注：LDA值分布柱状图中红色区域和绿色区域表示不同分组，红色表示在红色组别中起到重要作用的功能条目，绿色表示在绿色组别中起到重要作用的功能条目。图中仅展示了LDA Score大于设定值（默认设置为2）的功能条目，柱状图的长度代表LDA值的大小。</div>
+				</div>
+				<div class="p">默认LDA值大于2为组间具有统计学差异的功能条目。各功能条目在不同组中丰度比较图详见附件，示例如下图所示。</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>差异功能在各组样品中的相对丰度</center></div>
+					</div>
+				<div class="p1 explain">注：图中左右两侧表示不同的组别。横坐标表示样本，纵坐标表示功能条目的相对丰度。</div>
+				</div>
+			</div>
+			<div id="name3.8.7">
+				<h3>3.8.7 差异功能STAMP分析</h3>
+				<div class="p">基于PICRUSt功能二级分类结果，采用STAMP差异分析比较两组样品（Welch’s t-test 分析）或多组样品（ANOVA 分析，该软件只出Pvalue，无图片展示）之间功能的丰度，通过此分析可获得显著性差异功能。对KEGG和COG功能预测结果进行stamp分析，结果如下图所示。</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/KEGG/STAMP" target = "_blank">3-8功能预测/KEGG/STAMP</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Plot STAMP Result of KEGG</center></div>
+					</div>
+				</div>
+				<div class="dowload">
+					<div class="shuchu">输出文件:</div>
+					<div><a href="报告及附件/3-8功能预测/COG/STAMP" target = "_blank">3-8功能预测/COG/STAMP</a></div>
+				</div>
+				<div>
+					<div class = "albumSlider">
+						<div class = "fullview" alt = ""><a href=""><img src="" alt = "" class="fullview-img"/></a></div>
+					  	<div>
+							<center>
+								<table class="checkgroup" style="width: 40%">
+									<tr></tr>
+								</table>
+							</center>
+						</div>
+						<div class="p1"><center>Plot STAMP Result of COG</center></div>
+					</div>
+				</div>
+				<div class="p1 explain">注：左图所示为不同功能条目在两个样品或者两组样品中的丰度比例，中间所示为95% 置信度区间内的差异比例，最右边的值为 p 值，p 值＜0.05，表示差异显著。</div>
+			</div>
+
+			<div id="name4">
+				<h1><span>4.材料和方法 Materials and Methods</span></h1>
+<!-- 				<div class="dowload">
+					<div class="shuchu">英文版下载:</div>
+					<div><a href="###" target = "_blank">4材料与方法（英文版）</a></div>
+				</div> -->
+
+				<h2>4.1 实验方法</h2>
+				<h3>4.1.1 DNA的提取与检测</h3>
+				<div class="p">采用CTAB或SDS方法对样本的基因组DNA进行提取，并对DNA的纯度和浓度进行检测。</div>
+			</div>
+			<div id="name4.1.2">
+				<h3>4.1.2 PCR扩增</h3>
+				<div class="p">根据测序区域的选择，使用带Barcode的特异引物和高保真DNA聚合酶对选定的V3-V4可变区进行PCR扩增。</div>
+			</div>
+			<div id="name4.1.3">
+				<h3>4.1.3 扩增产物纯化</h3>
+				<div class="p">PCR产物用2%琼脂糖凝胶电泳进行检测，并对目标片段进行切胶回收，胶回收采用AxyPrepDNA凝胶回收试剂盒（AXYGEN公司）。</div>
+			</div>
+			<div id="name4.1.4">
+				<h3>4.1.4 扩增产物荧光定量</h3>
+				<div class = "p">参照电泳初步定量结果，对PCR扩增回收产物用QuantiFluor™ -ST蓝色荧光定量系统（Promega公司）进行检测定量，按照每个样本的测序量要求，进行相应比例的混合。</div>
+			</div>
+			<div id="name4.2">
+				<h2>4.2 文库构建和上机测序</h2>
+				<h3>4.2.1 文库构建和上机测序</h3>
+				<div class="p">使用NEB Next® Ultra™DNA Library Prep Kit建库试剂盒进行文库构建。构建好的文库通过Agilent Bioanalyzer 2100和Qubit进行质检，文库质检合格后进行上机测序。</div>
+			</div>
+
+			<div id="name5">
+				<h1><span>5. 分析方法（英文模板）</span></h1>
+				<h2>5.1 Sequencing</h2>
+				<h3>5.1.1 Extraction of genome DNA</h3>
+				<div class="p">Total genome DNA from samples was extracted using CTAB/SDS method. DNA concentration and purity was monitored on 1% agarosegels. According to the concentration, DNA was diluted to 1ng/μl using sterile water.</div>
+			</div>
+			<div id="name5.1.2">
+				<h3>5.1.2 Amplicon Generation</h3>
+				<div class="p">Primer：16S V3-V4: 341F-806R, 18S V9: 1380F-1510R, ITS1: ITS1F- ITS2R. 16S /18S rRNA genes were amplified used the specific primer with the barcode. All PCR reactions were carried out in 30μL reactions with 15μL of Phusion®High-Fidelity PCR Master Mix (New England Biolabs); 0.2μM of forward and reverse primers, and about 10 ng template DNA.Thermal cycling consisted of initial denaturation at 98 ℃ for 1 min, followed by 30 cycles of denaturation at 98℃ for 10 s, annealing at 50 ℃ for 30 s, and elongation at 72 ℃ for 60 s. Finally 72 ℃ for 5 min.</div>
+			</div>
+			<div id="name5.1.3">
+				<h3>5.1.3 PCR Products quantification and qualification</h3>
+				<div class="p">Mix same volume of 1X loading buffer (contained SYB green) with PCR products and operate electrophoresis on 2% agarose gel fordetection. Samples with bright main strip between 400-450bp were chosen for further experiments.</div>
+			</div>
+			<div id="name5.1.4">
+				<h3>5.1.4 PCR Products Mixing and Purification</h3>
+				<div class="p">PCR products was mixed in equidensity ratios. Then, mixture PCR products was purified with AxyPrepDNA Gel Extraction Kit (AXYGEN).</div>
+			</div>
+			<div id="name5.1.5">
+				<h3>5.1.5 PCR Products Mixing and Purification</h3>
+				<div class="p">Sequencing libraries were generated using NEB Next®Ultra™DNA Library Prep Kit for Illumina (NEB, USA) followingmanufacturer’s recommendations and index codes were added. The library quality was assessed on the Qubit@ 2.0 Fluorometer (Thermo Scientific) and Agilent Bioanalyzer 2100 system. At last, the library was sequenced on an Illumina Miseq/HiSeq2500 platform and 250bp/300bp paired-end reads were generated.</div>
+			</div>
+
+			<div id="name5.2">
+				<h2>5.2 Data analysis</h2>
+				<h3>5.2.1 Paired-end reads assemblies</h3>
+				<div class="p">Paired-end reads from the original DNA fragments were merged using FLASH, a very fast and accurate analysis tool, which was designed to merge paired-end reads when at least some of the reads overlap the read generated from the opposite end of the same DNA fragment. Paired-end reads was assigned to each sample according to the unique barcodes.</div>
+			</div>
+			<div id="name5.2.2">
+				<h3>5.2.2 OTU cluster and Species annotation</h3>
+				<div class="p">Sequences analysis were performed by UPARSE software package using the UPARSE-OTU and UPARSE-OTUref algorithms. In-house Perl scripts were used to analyze alpha (within samples) and beta (among samples) diversity. Sequences with ≥97% similarity were assigned to the same OTUs. We pick a representative sequences for each OTU and use the RDP classifier to annotate taxonomic information for each representative sequence. In order to compute Alpha Diversity, we rarify the OTU table and calculate three metrics: Chao1 estimates the species abundance; Observed Species estimates the amount of unique OTUs found in each sample, and Shannon index. Rarefaction curves were generated based on these three metrics.</div>
+			</div>
+			<div id="name5.2.3">
+				<h3>5.2.3 Phylogenics distance and community distribution</h3>
+				<div class="p">Graphical representation of the relative abundance of bacterial diversity from phylum to species can be visualized using Krona chart. Cluster analysis was preceded by principal component analysis (PCA), which was applied to reduce the dimension of the original variables using the QIIME software package. QIIME calculates both weighted and unweighted unifrac distance, which are phylogenetic measures of beta diversity. We used unweighted unifrac distance for Principal Coordinate Analysis (PCoA) and Unweighted Pair Group Method with Arithmetic mean (UPGMA) Clustering. PCoA helps to get principal coordinates and visualize them from complex, multidimensional data. It takes a transformation from a distance matrix to a new set of orthogonal axes. By which the maximum variation factor is demonstrated by first principal coordinate, and the second maximum one by the second principal coordinate, and so on. UPGMA Clustering is a type of hierarchical clustering method using average linkage and can be used to interpret the distance matrix.</div>
+			</div>
+			<div id="name5.2.4">
+				<h3>5.2.4 Statistical analysis</h3>
+				<div class="p">To confirm differences in the abundances of individual taxonomy between the two groups, STAMP software was utilized. LEfSe was used for the quantitative analysis of biomarkers within different groups. This method was designed to analyze data in which the number of species is much higher than the number of samples and to provide biological class explanations to establish statistical significance, biological consistency, and effect-size estimation of predicted biomarkers. To identify differences of microbial communities between the two groups, ANOSIM and ADONIS were performed based on the Bray-Curtis dissimilarity distance matrices.</div>
+			</div>
+			
+			<div id="name6">
+				<h1><span>6. 参考文献</span></h1>
+				<div class="p1">[1] Caporaso, J. Gregory, et al. Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample. Proceedings of the National Academy of Sciences 108.Supplement 1 (2011): 4516-4522.</div>
+				<div class="p1">[2] Youssef, Noha, et al. Comparison of species richness estimates obtained using nearly complete fragments and simulated pyrosequencing-generated fragments in 16S rRNA gene-based environmental surveys. Applied and environmental microbiology 75.16 (2009): 5227-5236.</div>
+				<div class="p1">[3] Hess, Matthias, et al. Metagenomic discovery of biomass-degrading genes and genomes from cow rumen. Science 331.6016 (2011): 463-467.</div>
+    			<div class="p1">[4] Ondov, Brian D., Nicholas H. Bergman, and Adam M. Phillippy. Interactive metagenomic visualization in a Web browser. BMC bioinformatics 12.1 (2011): 385.</div>
+    			<div class="p1">[5] DeSantis, T. Z., et al. NAST: a multiple sequence alignment server for comparative analysis of 16S rRNA genes. Nucleic acids research 34.suppl 2 (2006): W394-W399.</div>
+    			<div class="p1">[6] Lozupone, Catherine, and Rob Knight. UniFrac: a new phylogenetic method for comparing microbial communities. Applied and environmental microbiology 71.12 (2005): 8228-8235.</div>
+    			<div class="p1">[7] Lozupone, Catherine, et al. UniFrac: an effective distance metric for microbial community comparison. The ISME journal 5.2 (2011): 169.</div>
+    			<div class="p1">[8] Lozupone, Catherine A., et al. Quantitative and qualitative β diversity measures lead to different insights into factors that structure microbial communities. Applied and environmental microbiology 73.5 (2007): 1576-1585.</div>
+    			<div class="p1">[9] Lundberg, Derek S., et al. Practical innovations for high-throughput amplicon sequencing.Nature methods 10.10 (2013): 999-1002.</div>
+    			<div class="p1">[10] Avershina, Ekaterina, Trine Frisli, and Knut Rudi. De novo Semi-alignment of 16S rRNA Gene Sequences for Deep Phylogenetic Characterization of Next Generation Sequencing Data. Microbes and Environments 28.2 (2013): 211-216.</div>
+    			<div class="p1">[11] Magali Noval Rivas, PhD, Oliver T. Burton, et al. A microbita signature associated with experimental food allergy promotes allergic senitization and anaphylaxis. The Journal of Allergy and Clinical Immunology.Volume 131, Issue 1, Pages 201-212, January 2013.</div>
+    			<div class="p1">[12] Anderson, M.J. 2001. A new method for non-parametric multivariate analysis of variance. Austral Ecology, 26: 32-46.</div>
+    			<div class="p1">[13] McArdle, B.H. and M.J. Anderson. 2001. Fitting multivariate models to community data: A comment on distance-based redundancy analysis. Ecology, 82: 290-297.</div>
+    			<div class="p1">[14] Warton, D.I., Wright, T.W., Wang, Y. 2012. Distance-based multivariate analyses confound location and dispersion effects. Methods in Ecology and Evolution, 3, 89-101.</div>
+    			<div class="p1">[15] Zapala, M.A. and N.J. Schork. 2006. Multivariate regression analysis of distance matrices for testing associations between gene expression patterns and related variables. Proceedings of the National Academy of Sciences, USA, 103:19430-19435.</div>
+    			<div class="p1">[16] Segata, Nicola, et al. Metagenomic biomarker discovery and explanation. Genome Biol 12.6 (2011): R60.</div>
+			</div>
+
+			<div id="name7">
+				<h1><span>7. 自助数据分析云平台 Data analysis platform</span></h1>
+				<h2>7.1 APT-BioCloud</h2>
+				<div class="p">对于以上报告的分析内容，若您仍需对分析图片的字体、样式等做调整（或数据修改后需重新分析），您也可以登录中科新生命APT-BioCloud分析云平台，进行一站式自助数据分析。将数据导入至云平台后，您可自行进行统计学、火山图、聚类分析、富集分析等多种生物信息学分析，快速便捷输出个性化的生信分析图。注册与登录地址如下，如有疑问可联系中科新生命当地销售。</div>
+				<div class="p">注册网址：<a href="http//cloud.aptbiotech.com/#/register"><u>http//cloud.aptbiotech.com/#/register</u></a> 登录网址：<a href="http//cloud.aptbiotech.com/#/login"><u>http//cloud.aptbiotech.com/#/login</u></a></div>
+				<div class="albumSlider">
+					<div style="margin-top:20px;text-align:center;" class="fullview"><a href="img/biocloud.png" data-fancybox data-type="image"><img src= "img/biocloud.png" class="fullview-img" /></a></div>
+				</div>
+			</div>
+
+			<div id="name8">
+				<h1><span>8. 拓展研究建议(供参考)Research suggestions</span></h1>
+				<h2 id="name8.1">8.1 测序数据是否合格</h2>
+				<div class="p">测序数据是否合格主要有两个判定指标，一是测序下机数据是否合格，可以根据3.1 测序数据预处理及质控统计查看Q20，Q30等质控指标。二是测序数据量是否足够，主要参考3.4.2 Rarefaction Curve以及3.4.3 Shannon，它们的区别在于Rarefaction Curve是评估OTU数量是否趋近饱和，Shannon是评估α-多样性指数是否趋近饱和。</div>
+			</div>
+			<div id="name8.2">
+				<h2>8.2 了解各组内的菌群组成情况</h2>
+				<div class="p">查看一组样本内的菌群组成，可以通过宏观的方式，即3.4.1 α多样性指数观察组内的菌群多样性；也可以通过3.2.1 OTU聚类和物种注释查看组内的特定物种组成。3.3 物种组成分析中的各项分析是对物种组成的进一步统计及展示。</div>
+			</div>
+			<div id="name8.3">
+				<h2>8.3 判断各样本整体上的差异情况</h2>
+				<div class="p">（1）通过3.5.2 PCA分析，3.5.3 PCoA分析以及3.5.4 NMDS分析对各样本的差异情况进行总体评估。这三项分析的主要区别在于：PCA分析利用原始OTU数据表进行分析，是对测序数据的最客观还原；PCoA分析使用特定的距离矩阵，从而在OTU数据的基础上引入不同的加权值。例如基于Weighted Unifrac的PCoA分析中，两种进化距离较近的物种的丰度差异对样本的整体差异影响就会远小于PCA分析；NMDS分析是对OTU数据表进行秩次排序后，利用排序结果进行主成分分析，主要适用于菌群差异较大的样本。</div>
+				<div class="p">（2）可以使用统计检验手段对组间差异进行评估。主要分析有基于多样性指数的差异检验3.4.6 α多样性指数组间差异分析、3.5.1 β多样性指数组间差异分析；判断组间差异是否大于组内差异的3.6.1 Anosim检验；判断分组是否有意义的3.6.2 Adonis检验。</div>
+				<div class="p">（3）可以以聚类树的形式展现样本间的差异情况，可见3.3.4 UPGMA 聚类树。</div>
+			</div>
+			<div id="name8.4">
+				<h2>8.4 差异分组间具体有哪些物种差异</h2>
+				<div class="p">组间的差异物种可以通过3.7.1 LEfSe分析以及3.7.2 STAMP差异分析进行分析及检验。前者为多维统计，通过LDA值的表征物种丰度差异对组间差异的贡献程度，再用Kruskal-Wallis秩和检验显著性；后者为单维统计，针对特定物种进行组间的差异检验。在进行菌群biomarker初筛时，通常用LEfSe分析。</div>
+			</div>
+			<div id="name8.5">
+				<h2>8.5 通过菌群信息进行功能预测</h2>
+				<div class="p">基于数据库中菌群与功能基因的对应关系，以及测序中获得的菌群信息，可对样本中的功能基因进行预测，主要参考3.8 功能预测中各项分析。由于16S rDNA测序获得的功能基因只是预测，如需深入研究样本中的功能基因，建议后续再进行宏基因组测序。</div>
+			</div>
+
+			<div id="name9">
+				<h1><span>9. 组学期刊投稿指南(供参考)Publication recommendation</span></h1>
+				<h2>9.1 第一档期刊（影响因子9 分以上）</h2>
+				<div class="p">组学期刊：Nature Genetics，Genome Research， Microbiome，Molecular Systems Biology等</div>
+				<div class="p">综合性期刊： Cell，Nature，Science，Nature Communications，PNAS，Cell Metabolism，Molecular Cell，Cell Research等</div>
+				<div class="p">医学专业期刊：Nature Medicine，Cancer Cell，Cancer Research，European Heart Journal，Circulation，Journal of the American College of Cardiology，Gut，Gastroenterology，Hepatology，Diabetes Care，Molecular Psychiatry，Immunity 等</div>
+				<div class="p">农林专业期刊：Nature Plants，Molecular Plant，Plant Cell等</div>
+				<div class="p"><b>组学思路</b>: 在这类高水平期刊中，组学驱动的研究主要包括：1.大队列研究，筛选临床生物标志物以及进行疾病分子分型等。2. 组学+后续功能机制研究。3. 结合时下的热点，如肠道微生物进行相关研究，阐明肠道微生物与疾病的相关性及相互作用机制。</div>
+			</div>
+			<div id="name9.2">
+				<h2>9.2 第二档期刊（影响因子4~9分）</h2>
+				<div class="p">组学期刊：Molecular &#38; Cellular Proteomics，Metabolism，Metallomics，Gigascience，Proteomics &#38; Bioinformatics等</div>
+				<div class="p">综合性期刊： Scientific Data，Scientific Reports，Cell Reports，Progress in Lipid Research，Frontiers in Microbiology，mSystems等</div>
+				<div class="p">医学专业期刊：Advances in Cancer Research，International Journal of Cancer，Diabetologia，Thyroid，Diabetes，Oncogene，mBio等</div>
+				<div class="p">农林领域专业期刊：New Phytologist，Plant Biotechnology Journal，Plant Physiology，Plant Journal，Plant Cell and Environment，Food Chemistry，Journal of Experimental Botany等</div>
+				<div class="p"><b>组学思路</b>: 发表在该分数段期刊的组学文章，1. 对于蛋白组学，修饰组学而言，要求组学+功能验证与机制研究（如表达量验证，基因敲除，点突变，位点特异性抗体验证，蛋白活性验证，后续功能实验，动物模型等）。2. 对于脂质组学是个例外，研究基础浅，新颖性高，纯脂质组学也能发表文章，无需后续验证。</div>
+			</div>
+			<div id="name9.3">
+				<h2>9.3 第三档期刊（影响因子4分以下）</h2>
+				<div class="p">组学期刊：BMC Genomics， Proteomics，Journal of Proteomics，Journal of Proteome Research，Metabolomics等</div>
+				<div class="p">综合性期刊： Plos One等</div>
+				<div class="p">农林领域专业期刊： BMC Plant Biology，Journal of Agricultural and Food Chemistry，Frontiers in Plant Science等</div>
+				<div class="p"><b>组学思路</b>: 这类文章一般是最常见也是最简单的组学研究思路。1. 蛋白质组学方向：组学+差异蛋白WB或PRM验证。2.蛋白质翻译后修饰组学方向：则以修饰组学数据分析为主。3. 代谢组学方向：组学（+差异代谢物MRM验证）。</div>
+			</div>
+			<div id="name10">
+				<h1><span>10. 部分合作发表文章Cooperative Projects Papers</span></h1>
+				<h2>10.1 医学</h2>
+				<div class="p1">[1]Lysozyme-Assisted Photothermal Eradication of Methicillin-Resistant Staphylococcus aureus Infection and Accelerated Tissue Repair with Natural Melanosome Nanostructures. ACS Nano.</div>
+				<div class="p1">[2]One-Carbon Metabolism Supports SAdenosylmethionine and Histone Methylation to Drive Inflammatory Macrophages. Molecular Cell.</div>
+				<div class="p1">[3]Early Prediction of Developing Type 2 Diabetes by Plasma Acylcarnitines: Population-Based Study. Diabetes Care.</div>
+    			<div class="p1">[4]Hepatocellular Carcinoma-Associated Protein TD26 Interacts and Enhances Sterol Regulatory Element-Binding Protein 1 Activity to Promote Tumor Cell Proliferation and Growth. Hepatology.</div>
+    			<div class="p1">[5]Polyunsaturated fatty acids metabolism, purine metabolism and inosine as potential independent diagnostic biomarkers for major depressive disorder in children and adolescents. Mol Psychiatry.</div>
+    			<div class="p1">[6]CLOCK Acetylates ASS1 to Drive Circadian Rhythm of Ureagenesis. Mol Cell.</div>
+    			<div class="p1">[7]EGFR modulates monounsaturated fatty acid synthesis through phosphorylation of SCD1 in lung cancer. Molecular Cancer.</div>
+    			<div class="p1">[8]Protein phosphatase 2A has an essential role in promoting thymocyte survival during selection. Proc Natl Acad Sci U S A.</div>
+    			<div class="p1">[9]O-GlcNAcylation destabilizes the active tetrameric PKM2 to promote the Warburg effect. Proc Natl Acad Sci U S A.</div>
+    			<div class="p1">[10]Proteomic analysis of solid pseudopapillary tumor of the pancreas reveals dysfunction of the endoplasmic reticulum protein processing pathway. Molecular &#38; Cellular Proteomics.</div>
+			</div>
+			<div id="name10.2">
+				<h2>10.2 植物</h2>
+				<div class="p1">[1]Natural alleles of a proteasome α2 subunit gene contribute to thermotolerance and adaptation of African rice. Nat Genetics.</div>
+				<div class="p1">[2]Maize Oxalyl-CoA Decarboxylase1 Degrades Oxalate and Affects the Seed Metabolome and Nutritional Quality. Plant Cell.</div>
+				<div class="p1">[3]OsSPL3, a SBP-Domain Protein, Regulates Crown Root Development in Rice. Plant Cell.</div>
+    			<div class="p1">[4]RRM Transcription Factors Interact with NLRs and Regulate Broad-Spectrum Blast Resistance in Rice. Mol Cell.</div>
+    			<div class="p1">[5]Global analysis of sumoylation function reveals novel insights into development and appressorium-mediated infection of the rice blast fungus.New Phytologist.</div>
+    			<div class="p1">[6]Quantitative Phosphoproteomic and Metabolomic Analyses Reveal GmMYB173 Optimizes Flavonoid Metabolism in Soybean under Salt Stress. Molecular &#38; Cellular Proteomics.</div>
+    			<div class="p1">[7]Label-Free Quantitative Proteomics of Lysine Acetylome Identifies Substrates of Gcn5 in Magnaporthe oryzae Autophagy and Epigenetic Regulation.mSystems.</div>
+    			<div class="p1">[8]Phototrophy and starvation-based induction of autophagy upon removal of Gcn5-catalyzed acetylation of Atg7 in Magnaporthe oryzae. Autophagy.</div>
+    			<div class="p1">[9]Integrative Transcriptome and Proteome Analysis Identifies Major Metabolic Pathways Involved in Pepper Fruit Development. J Proteome Res.</div>
+    			<div class="p1">[10]Proteomics integrated with metabolomics: analysis of the internal causes of nutrient changes in alfalfa at different growth stages. BMC Plant Biology.</div>
+			</div>
+			<div id="name10.3">
+				<h2>10.3 动医/动科/食品等其他</h2>
+				<div class="p1">[1]Fecal Microbiota Transplantation Beneficially Regulates Intestinal Mucosal Autophagy and Alleviates Gut Barrier Injury. mSystems.</div>
+				<div class="p1">[2]Quantitative Phosphoproteomic Analysis among Muscles of Different Color Stability using Tandem Mass Tag Labeling.Food Chem.</div>
+				<div class="p1">[3]Comparative Analysis of Whey N-Glycoproteins in Human Colostrum and Mature Milk Using Quantitative Glycoproteomics.J Agric Food Chem.</div>
+    			<div class="p1">[4]N-glycosylation proteomic characterization and cross-species comparison of milk fat globule membrane proteins from mammals. Proteomics.</div>
+    			<div class="p1">[5]Metabolomics Reveals that Crossbred Dairy Buffaloes Are More Thermotolerant than Holstein Cows under Chronic Heat Stress. Journal of agricultural and food chemistry.</div>
+    			<div class="p1">[6]The Synergistic Effect of Exogenous Glutamine and Rifampicin Against Mycobacterium Persisters. Frontiers in Microbiology.</div>
+			</div>
+
+			<div id="name99">
+				<h1><span>联系我们</span></h1>
+				<div style="text-align: center"><img src="img/contact.png"> </div>
+			</div>
+		</div>
+	</section>
+
+
+	<footer id="footer">
+		<p>Technical Support &nbsp;&nbsp;&nbsp;E-mail:<a href="mailto:info_apt@sibs.ac.cn">&nbsp;info_apt@sibs.ac.cn</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Website:<a href="http://www.aptbiotech.com/" target="_blank" >http://www.aptbiotech.com</a></p>
+	</footer>
+
+	<div class="scroll_top not_visible"><i class="fa fa-angle-up"></i></div>
+</body>
+</html>
