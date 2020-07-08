@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-     # should work even without -*-
 import os
 import sys
 import re
@@ -6,6 +7,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None
 # import modin.pandas as pd
 from collections import Counter
+from collections import OrderedDict
 # from docx import Document
 from docx.shared import Inches
 from docx.shared import Cm
@@ -51,30 +53,41 @@ def extract_top(data, func, num=5):
 			top = top[:len(pvalue_top)] if pvalue_top else []
 		return top, pathway
 
+
 class Template:
 	def __init__(self, path, types):
 		self.types = types
 		os.chdir(path)
-		try :
-			information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
-			if information_file:
-				self.projectinfo = pd.read_excel(information_file[0], header=None)
-			else:
-				print('Error:该项目下无project_information表')
-				exit()
-			self.species = self.projectinfo.iloc[3, 1]
-			self.groupvs = self.projectinfo.iloc[4, 1]
-			self.database = self.projectinfo.iloc[5, 1]
-			
-			self.sampleInfo = pd.read_csv('samples.txt', sep='\t', header=None)
-			self.origi_record = pd.read_excel('原始记录.xlsx', sheet_name=1).fillna('')
-			self.fc = float(self.origi_record[self.origi_record.iloc[:, 0] == '差异倍数'].iloc[0, 1])
-			if self.types in ['pl']:
-				statistic = pd.read_csv(os.path.join('Evaluation', 'PhosphoStatistic.csv'))
-			else:
-				statistic = pd.read_csv(os.path.join('Evaluation', 'Statistic.csv'))
-			self.statistic_list = [str(j) for i in statistic.values.T.tolist() for j in i]
-			
+
+		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
+		if information_file:
+			self.projectinfo = pd.read_excel(information_file[0], header=None)
+		else:
+			raise Exception('Error:该项目下无project_information表')
+
+		self.species = self.projectinfo.iloc[3, 1]
+		self.groupvs = str(self.projectinfo.iloc[4, 1])
+		self.database = self.projectinfo.iloc[5, 1]
+		
+		self.sampleInfo = pd.read_csv('samples.txt', sep='\t', header=None)
+		self.origi_record = pd.read_excel('原始记录.xlsx', sheet_name=1).fillna('')
+		self.fc = float(self.origi_record[self.origi_record.iloc[:, 0] == '差异倍数'].iloc[0, 1])
+		if self.types in ['pl', 'gl', 'nl', 'sl', 'yl', 'al', 'ml', 'pt', 'at']:
+			statistic_file = [i for i in os.listdir('Evaluation') if re.search('^(.(?!_))*Statistic.*csv$', i, re.I)]
+			if statistic_file:
+				statistic = pd.read_csv(os.path.join('Evaluation', statistic_file[0]))
+		else:
+			statistic = pd.read_csv(os.path.join('Evaluation', 'Statistic.csv'))
+		self.statistic_list = [str(j) for i in statistic.values.T.tolist() for j in i]
+
+		peptideScore_file = [i for i in os.listdir('Evaluation') if re.search('PeptideScore', i, re.I)]
+		if peptideScore_file:
+			peptideScore = os.path.join('Evaluation', peptideScore_file[0])
+			with open(peptideScore) as f:
+				self.medianScore = f.readline().split('=')[-1].strip()
+				self.percentage = re.split('[=(]', f.readline())[1].strip()
+
+		if self.groupvs != 'nan':
 			go_file = os.path.join(self.groupvs, 'go', 'GO.xlsx')
 			self.go = pd.read_excel(go_file, sheet_name=None)
 			self.goEnrich_top5 = extract_top(self.go, 'goEnrich')[0]
@@ -82,19 +95,10 @@ class Template:
 			kegg_file = os.path.join(self.groupvs, 'kegg', 'kegg.xlsx')
 			self.kegg = pd.read_excel(kegg_file, sheet_name=None)
 			self.keggEnrich_top5, self.pathway = extract_top(self.kegg, 'keggEnrich')
+		else:
+			self.go, self.goEnrich_top5 = None, None
+			self.kegg, self.keggEnrich_top5, self.pathway = None, None, None
 
-			peptideScore_file = [i for i in os.listdir('Evaluation') if re.search('PeptideScore', i, re.I)]
-			if peptideScore_file:
-				peptideScore = os.path.join('Evaluation', peptideScore_file[0])
-				with open(peptideScore) as f:
-					self.medianScore = f.readline().split('=')[-1].strip()
-					self.percentage = re.split('[=(]', f.readline())[1].strip()
-
-		except Exception as e:
-			print(e)
-			print('请检查project_information中信息是否填写正确')
-			# raise
-			exit()
 	
 	def paragraph_format(self, pa, size, family, r = 0x00, g = 0x00, b = 0x00, bold = None):
 		pa.font.size = Pt(size)
@@ -134,7 +138,7 @@ class Template:
 				self.paragraph_format(p.add_run(text2_list[i]), size = size, family = family_en, bold=bold)
 		self.paragraph_format(p.add_run(text_list[-1]), size = size, family = family_ch, bold=bold)
 
-	def insert_table(self, data, table, axis=0, size=9, family_ch=u'微软雅黑', family_en='Arial'):
+	def insert_table(self, data, table, axis=0, size=9, family_ch=u'微软雅黑', family_en='Arial', bold=None):
 		'''
 		data:插入的数据，格式为dataframe
 		table:待插入数据的表格
@@ -144,20 +148,20 @@ class Template:
 		total_columns = len(table.columns)
 		if axis == 0:
 			row_cells = table.rows[total_row - 1].cells
-			for row_num in range(data.shape[0]):		
+			for row_num in range(data.shape[0]):
 				if row_num > 0:
 					row_line = table.add_row()
 					row_line.height = Cm(0.7)
 					row_cells = row_line.cells
 					# row_cells = table.rows[total_row + row_num -1].cells			
-				for col_num in range(data.shape[1]):			
+				for col_num in range(data.shape[1]):
 					tmp = data.iloc[row_num, col_num]
 					if type(tmp) == 'float':
 						tmp = int(tmp)
 					pa = row_cells[col_num].paragraphs[0].add_run(str(tmp))
 					row_cells[col_num].paragraphs[0].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
 					row_cells[col_num].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-					self.paragraph_format(pa, size=size, family=family_en)
+					self.paragraph_format(pa, size=size, family=family_en, bold=bold)
 		else:
 			if data.shape[0] > 2:
 				for i in range(data.shape[0] - 2):
@@ -167,7 +171,7 @@ class Template:
 					pa = row_cells[0].paragraphs[0].add_run('样本名称')
 					row_cells[0].paragraphs[0].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
 					row_cells[0].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-					self.paragraph_format(pa, size=size, family=family_ch)
+					self.paragraph_format(pa, size=size, family=family_ch, bold=bold)
 
 			col_cells = table.columns[total_columns - 1].cells
 			for col_num in range(data.shape[1]):
@@ -180,7 +184,7 @@ class Template:
 					pa = col_cells[row_num].paragraphs[0].add_run(str(tmp))
 					col_cells[row_num].paragraphs[0].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
 					col_cells[row_num].vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-					self.paragraph_format(pa, size=size, family=family_en)
+					self.paragraph_format(pa, size=size, family=family_en, bold=bold)
 
 	def table_center(self, table):
 		'''
@@ -212,6 +216,15 @@ class Template:
 		else:
 			return False
 
+	def record(self, record):		
+		record_diff = record[record.loc[:, 'group'].str.contains('vs|oneway|twoway')]
+		# f1 = lambda x: re.sub(r'\(.*\)', '', str(x))
+		# f2 = lambda x: int(float(x))
+		tmp = record_diff.iloc[:, 1:].applymap(lambda x: re.sub(r'\(.*\)', '', str(x)))  # applymap对每个元素进行处理
+		tmp = tmp.applymap(lambda x: x if '-' in str(x) else int(float(x)))
+		record_diff = pd.concat([record_diff.iloc[:, 0], tmp], axis=1)
+		return record_diff
+
 	def header(self, paragraphs, start_row=10):
 		today = str(datetime.date.today())
 		for i in range(3):
@@ -223,15 +236,6 @@ class Template:
 				self.paragraph_format(pa, size=14, family="Arial", bold=True) #### family = 'Calibri'
 		pa = paragraphs[start_row + 3].add_run(today)
 		self.paragraph_format(pa, size=14, family="Arial", bold=True)
-
-	def record(self, record):		
-		record_diff = record[record.loc[:, 'group'].str.contains('vs|oneway|twoway')]
-		f1 = lambda x: re.sub(r'\(.*\)', '', str(x))
-		f2 = lambda x: int(float(x))
-		tmp = record_diff.iloc[:, 1:].applymap(f1)  # applymap对每个元素进行处理
-		tmp = tmp.applymap(f2)
-		record_diff = pd.concat([record_diff.iloc[:, 0], tmp], axis=1)
-		return record_diff
 
 	# =============================================================================
 	# 插入表格数据
@@ -259,7 +263,7 @@ class Template:
 			diff_table.cell(1, 1).text = ''
 			diff_table.cell(1, 1).paragraphs[0].paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
 			diff_table.cell(1, 1).vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-			self.paragraph_format(diff_table.cell(1, 1).paragraphs[0].add_run(tmp_text), size = 9, family = 'Arial')
+			self.paragraph_format(diff_table.cell(1, 1).paragraphs[0].add_run(tmp_text), size = 9, family = 'Arial', bold=True)
 		record_diff = self.record(self.origi_record)
 		self.insert_table(record_diff, tables[3])
 
@@ -281,19 +285,19 @@ class Template:
 			proNum = [protein[i].count() for i in LFQ_list]
 			proNum.insert(0, protein['Protein'].count())
 			database_list = [self.database] * len(sample)
-			data_frame_dict = {'database': database_list, 'sample': sample, 'proNum': proNum}
+			data_frame_dict = OrderedDict({'database': database_list, 'sample': sample, 'proNum': proNum})
 			data_frame = pd.DataFrame(data_frame_dict)
 			self.insert_table(data_frame, tables[6])
 			self.insert_table(record_diff, tables[7])
 			pa = tables[8].cell(8,1).paragraphs[0].add_run(self.database)
 			self.paragraph_format(pa, size=9, family="Arial")
-		if self.types in ['i', 't']:
+		if self.types in ['i', 't', 'pt', 'at']:
 			self.insert_table(record_diff, tables[6])
 			pa = tables[8].cell(7,1).paragraphs[0].add_run(self.database)
 			self.paragraph_format(pa, size=9, family="Arial")
 
 			itraq_tmt = self.sampleInfo.T.iloc[:2,:]
-			itraq_tmt.iloc[0, :] = itraq_tmt.iloc[0, :].apply(lambda x: str(x).split('.')[-1])
+			itraq_tmt.iloc[0, :] = itraq_tmt.iloc[0, :].apply(lambda x: re.split('[. ]', str(x))[-1])
 			if len(itraq_tmt.iloc[0,:]) != len(set(itraq_tmt.iloc[0, :])):
 				newdf = pd.DataFrame()
 				for i, j in itraq_tmt.T.groupby(0):
@@ -312,7 +316,7 @@ class Template:
 				No[0] = 'No.'
 				itraq_tmt['No'] = No
 				self.insert_table(itraq_tmt, tables[7], axis=1)
-		if self.types in ['pl']:
+		if self.types in ['pl', 'gl', 'nl', 'sl', 'yl', 'al', 'ml']:
 			self.insert_table(record_diff, tables[6])
 			pa = tables[7].cell(8,1).paragraphs[0].add_run(self.database)
 			self.paragraph_format(pa, size=9, family="Arial")
@@ -322,18 +326,22 @@ class Template:
 	# =============================================================================
 	def text_png_data(self, document, paragraphs):
 		if os.path.exists(os.path.join('Evaluation', 'Venn')):
-			if 'p' in self.types:
-				venn_pro = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')) if re.search('png', i)]
-				venn_pep = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn')) if re.search('png', i)]
-			else:
-				venn2 = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间')) if re.search('png', i)]
-		keggID = extract_top(self.kegg, 'keggID')[0][0]
-		bp_top = extract_top(self.go, 'BP')[0]
-		mf_top = extract_top(self.go, 'MF')[0]
-		cc_top = extract_top(self.go, 'CC')[0]
-		map2query_top5 = extract_top(self.kegg, 'map2query')[0]
+			# if self.types in ['pl', 'gl']:
+			# 	venn_pro = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')) if re.search('png', i)]
+			# 	venn_pep = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn')) if re.search('png', i)]
+			# else:
+			venn2 = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间')) if re.search('png', i)]
+		if all([self.go, self.kegg]):
+			keggID = extract_top(self.kegg, 'keggID')[0][0]
+			bp_top = extract_top(self.go, 'BP')[0]
+			mf_top = extract_top(self.go, 'MF')[0]
+			cc_top = extract_top(self.go, 'CC')[0]
+			map2query_top5 = extract_top(self.kegg, 'map2query')[0]
+		else:
+			keggID, bp_top, mf_top, cc_top, map2query_top5 = '', '', '', '', ''
 		groupNum = str(len(set(self.sampleInfo.iloc[:,2])))
 		Num = list(Counter(self.sampleInfo.iloc[:,2]).values())
+		Num = [str(i) for i in Num]
 		Num = ','.join(list(set(Num))) if len(set(Num)) > 1 else str(Num[0])
 		total_num = str(len(self.sampleInfo.iloc[:,2]))
 		if os.path.exists(os.path.join('Evaluation', 'ModifiedSiteAnnot.txt')):
@@ -344,7 +352,8 @@ class Template:
 					tmp2 = fs.readline().strip().split('=')
 					xx_pro = tmp2[0].strip('"')
 					site_num2 = tmp2[1].split('sites')[0].strip()
-					mean_freq = fs.readline().strip().split('=')[1].strip('"')
+					mean_freq = fs.readline().strip().split('=')[1].strip('"').replace('%', '')
+		
 		for i, p in enumerate(paragraphs):
 			if 'upRatio' in p.text:
 				find_num = len(re.findall('upRatio', p.text))
@@ -372,12 +381,13 @@ class Template:
 				else:
 					self.text_replace(p, ['CC-TOP5等定位蛋白质'], ['无P值小于0.05的显著性定位蛋白'])
 			if 'kegg-map2query-top5' in p.text:
-				self.text_replace(p, ['kegg-map2query-top5'], ['，'.join(map2query_top5)])
+				self.text_replace(p, ['kegg-map2query-top5'], [', '.join(map2query_top5)])
 			if 'KeggEnrich-top5' in p.text:
 				if self.keggEnrich_top5:
-					self.text_replace(p, ['KeggEnrich-top5', 'KeggEnrich-top1'], ['，'.join(self.keggEnrich_top5), self.pathway])
+					self.text_replace(p, ['KeggEnrich-top5', 'KeggEnrich-top1'], [', '.join(self.keggEnrich_top5), self.pathway])
 				else:
-					self.text_replace(p, ['KeggEnrich-top5等重要通路发生了显著变化', 'KeggEnrich-top1'], ['该比较组没有P值小于0.05的显著性富集通路', self.pathway])
+					if self.pathway:
+						self.text_replace(p, ['KeggEnrich-top5等重要通路发生了显著变化', 'KeggEnrich-top1'], ['该比较组没有P值小于0.05的显著性富集通路', self.pathway])
 			if 'Percentage' in p.text:
 				self.text_replace(p, ['Percentage', 'Median Score'], [self.percentage, self.medianScore])
 			if 'groupNum' in p.text:
@@ -388,7 +398,10 @@ class Template:
 				if statistic_file:
 					self.insert_png(p, '[Statistic]', os.path.join('Evaluation', statistic_file[0]))
 			if '[venn1]' in p.text:
-				self.insert_png(p, '[venn1]', os.path.join('Evaluation', 'Venn', '组内', f'venn_{self.groupvs.split("_vs_")[0]}.png'))
+				is_replace = self.insert_png(p, '[venn1]', os.path.join('Evaluation', 'Venn', '组内', f'venn_{self.groupvs.split("_vs_")[0]}.png'))
+				if is_replace == False:
+					p.clear()
+					self.paragraph_format(p.add_run('该项目无组内韦恩图'), size = 10.5, family = u'微软雅黑')
 			if '[venn2]' in p.text:
 					if venn2:
 						self.insert_png(p, '[venn2]', os.path.join('Evaluation', 'Venn', '组间', f'{venn2[0]}'))
@@ -406,7 +419,10 @@ class Template:
 					self.paragraph_format(p.add_run('该项目结果无法进行火山图绘制。'), size = 10.5, family = u'微软雅黑')
 					self.delete_paragraph(paragraphs, list(range(i + 1, i + 6)))
 			if '[cluster]' in p.text:
-				self.insert_png(p, '[cluster]', os.path.join(self.groupvs, 'CLUSTER', 'cluster1.png'))
+				if os.path.exists(os.path.join(self.groupvs, 'CLUSTER')):
+					self.insert_png(p, '[cluster]', os.path.join(self.groupvs, 'CLUSTER', 'cluster1.png'))
+				elif os.path.exists(os.path.join(self.groupvs, 'cluster')):
+					self.insert_png(p, '[cluster]', os.path.join(self.groupvs, 'cluster', 'cluster1.png'))
 			if '[Subcellular_Localization]' in p.text:
 				self.insert_png(p, '[Subcellular_Localization]', os.path.join(self.groupvs, 'cello', 'Subcellular_Localization.png'))
 			if '[TopDomainStat]' in p.text:
@@ -439,7 +455,7 @@ class Template:
 				is_replace = self.insert_png(p, '[Module_ppi]', os.path.join(self.groupvs, 'ppi', 'Module_ppi.png'))
 				if is_replace == False:
 					paragraphs[i - 1].clear()
-					self.paragraph_format(paragraphs[i - 1].add_run('该项目PPI结果无法进行蛋白网络模块分析。'), size = 10.5, family = u'微软雅黑')
+					self.paragraph_format(paragraphs[i - 1].add_run('该比较组PPI结果无法进行蛋白网络模块分析。'), size = 10.5, family = u'微软雅黑')
 					self.delete_paragraph(paragraphs, [i, i + 1])
 			if '[mass_error]' in p.text:
 				mass_error_file = [i for i in os.listdir('Evaluation') if re.search('mass.*.png', i, re.I)]
@@ -479,11 +495,16 @@ class Template:
 			if 'mean_freq' in p.text:
 				self.text_replace(p, ['mean_freq'], [mean_freq])
 			if 'group1' in p.text:
-				self.text_replace(p, ['group1', 'group2'], [self.groupvs.split('_vs_')[0], self.groupvs.split('_vs_')[1]])
+				if self.groupvs != 'nan':
+					self.text_replace(p, ['group1', 'group2'], [self.groupvs.split('_vs_')[0], self.groupvs.split('_vs_')[1]])
 			if '[PhosphorylatedSitesInPro]' in p.text:
-				self.insert_png(p, '[PhosphorylatedSitesInPro]', os.path.join('Evaluation', 'PhosphorylatedSitesInPro.png'))
+				siteinpro_file = [i for i in os.listdir('Evaluation') if re.search('sitesinpro.png', i, re.I)]
+				if siteinpro_file:
+					self.insert_png(p, '[PhosphorylatedSitesInPro]', os.path.join('Evaluation', siteinpro_file[0]))
 			if '[PhosphorylatedFrequency]' in p.text:
-				self.insert_png(p, '[PhosphorylatedFrequency]', os.path.join('Evaluation', 'PhosphorylatedFrequency.png'))
+				frequency_file = [i for i in os.listdir('Evaluation') if re.search('Frequency.png', i, re.I)]
+				if frequency_file:
+					self.insert_png(p, '[PhosphorylatedFrequency]', os.path.join('Evaluation', frequency_file[0]))
 			if '[Phospho_STY_Distribution]' in p.text:
 				self.insert_png(p, '[Phospho_STY_Distribution]', os.path.join('Evaluation', 'Phospho_STY_Distribution.png'))
 			if '[inner1_venn]' in p.text:
@@ -491,68 +512,137 @@ class Template:
 			if '[inner2_venn]' in p.text:
 				self.insert_png(p, '[inner2_venn]', os.path.join('Evaluation', 'Venn', '组内', f'venn_Pep_{self.groupvs.split("_vs_")[0]}.png'))
 			if '[all_pro_venn]' in p.text:
-				pro_venn_file = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')) if re.search('png', i)]
-				if pro_venn_file:
-					self.insert_png(p, '[all_pro_venn]', os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn', pro_venn_file[0]))
+				if os.path.exists(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')):
+					pro_venn_file = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')) if re.search('png', i)]
+					if pro_venn_file:
+						self.insert_png(p, '[all_pro_venn]', os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn', pro_venn_file[0]))
 			if '[all_pep_venn]' in p.text:
-				pep_venn_file = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn')) if re.search('png', i)]
-				if pep_venn_file:
-					self.insert_png(p, '[all_pep_venn]', os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn', pep_venn_file[0]))
-			if '[motif_count]' in p.text:
-				self.insert_png(p, '[motif_count]', os.path.join('motif', 'motif_count.png'))
-			if '[motif_fold]' in p.text:
-				self.insert_png(p, '[motif_fold]', os.path.join('motif', 'motif_fold.png'))
+				if os.path.exists(os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn')):
+					pep_venn_file = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn')) if re.search('png', i)]
+					if pep_venn_file:
+						self.insert_png(p, '[all_pep_venn]', os.path.join('Evaluation', 'Venn', '组间', 'PeptideVenn', pep_venn_file[0]))
+			if os.path.exists('motif'):
+				if '[motif_count]' in p.text:
+					self.insert_png(p, '[motif_count]', os.path.join('motif', 'motif_count.png'))
+				if '[motif_fold]' in p.text:
+					self.insert_png(p, '[motif_fold]', os.path.join('motif', 'motif_fold.png'))
 
-			if '[motif_fold_all]' in p.text:
-				self.delete_paragraph(paragraphs, [i])
-				motif_all = pd.read_csv(os.path.join('motif', 'motif_fold.txt'), sep='\t', header=None).head(6)
-				motif_all_list = motif_all.iloc[:, 1].tolist()
-				if len(motif_all_list) > 3:
-					motif_all_table = document.add_table(rows=4,cols=3,style='Table Grid')
-				else:
-					motif_all_table = document.add_table(rows=2,cols=len(motif_all_list),style='Table Grid')
-				self.table_center(motif_all_table)
-				self.move_table_after(motif_all_table, paragraphs[i - 1])
-				for j in range(len(motif_all_list)):
-					if j < 3:
-						self.paragraph_format(motif_all_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 12, family ='Arial',bold=True)
-						run = motif_all_table.cell(1, j).paragraphs[0].add_run()
-						run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+				if '[motif_fold_all]' in p.text:
+					if os.path.exists(os.path.join('motif', 'motif_fold.txt')):
+						self.delete_paragraph(paragraphs, [i])
+						motif_all = pd.read_csv(os.path.join('motif', 'motif_fold.txt'), sep='\t', header=None).head(6)
+						motif_all_list = motif_all.iloc[:, 1].tolist()
+						if len(motif_all_list) < 4:
+							motif_all_table = document.add_table(rows=2,cols=len(motif_all_list),style='Table Grid')
+						elif len(motif_all_list) == 4:
+							motif_all_table = document.add_table(rows=4,cols=2,style='Table Grid')
+						else:
+							motif_all_table = document.add_table(rows=4,cols=3,style='Table Grid')
+						self.table_center(motif_all_table)
+						self.move_table_after(motif_all_table, paragraphs[i - 1])
+						for j in range(len(motif_all_list)):
+							if j < 2:
+								self.paragraph_format(motif_all_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+								run = motif_all_table.cell(1, j).paragraphs[0].add_run()
+								run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+							elif j == 2 or j == 3:
+								if len(motif_all_list) < 4:
+									self.paragraph_format(motif_all_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+									run = motif_all_table.cell(1, j).paragraphs[0].add_run()
+									run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+								elif len(motif_all_list) == 4:
+									self.paragraph_format(motif_all_table.cell(2, j - 2).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+									run = motif_all_table.cell(3, j - 2).paragraphs[0].add_run()
+									run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+								else:
+									if j == 2:
+										self.paragraph_format(motif_all_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+										run = motif_all_table.cell(1, j).paragraphs[0].add_run()
+										run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+									else:
+										self.paragraph_format(motif_all_table.cell(2, j - 3).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+										run = motif_all_table.cell(3, j - 3).paragraphs[0].add_run()
+										run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+							else:
+								self.paragraph_format(motif_all_table.cell(2, j - 3).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 10.5, family ='Arial',bold=True)
+								run = motif_all_table.cell(3, j - 3).paragraphs[0].add_run()
+								run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
 					else:
-						self.paragraph_format(motif_all_table.cell(2, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_all_list[j]}'), size = 12, family ='Arial',bold=True)
-						run = motif_all_table.cell(3, j).paragraphs[0].add_run()
-						run.add_picture(os.path.join('motif', f'{motif_all_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+						p.clear()
+						if 'p' in self.types:
+							self.paragraph_format(p.add_run('磷酸化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'a' in self.types:
+							self.paragraph_format(p.add_run('乙酰化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'g' in self.types:
+							self.paragraph_format(p.add_run('泛素化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'n' in self.types:
+							self.paragraph_format(p.add_run('糖基化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 's' in self.types:
+							self.paragraph_format(p.add_run('琥珀酰化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'y' in self.types:
+							self.paragraph_format(p.add_run('酪氨酸磷酸化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'm' in self.types:
+							self.paragraph_format(p.add_run('丙二酰化肽段在数据库中无motif'), size = 10.5, family = u'微软雅黑', bold=True)
 
-			if '[motif_up]' in p.text:
-				if os.path.exists(os.path.join(self.groupvs, 'motif', 'up', 'motif_fold.txt')):
-					self.delete_paragraph(paragraphs, [i])
-					motif_up = pd.read_csv(os.path.join(self.groupvs, 'motif', 'up', 'motif_fold.txt'), sep='\t', header=None).head(3)
-					motif_up_list = motif_up.iloc[:, 1].tolist()
-					motif_up_table = document.add_table(rows=2,cols=len(motif_up_list),style='Table Grid')
-					self.table_center(motif_up_table)
-					self.move_table_after(motif_up_table, paragraphs[i - 1])
-					for j in range(len(motif_up_list)):
-						self.paragraph_format(motif_up_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_up_list[j]}'), size = 12, family ='Arial',bold=True)
-						run = motif_up_table.cell(1, j).paragraphs[0].add_run()
-						run.add_picture(os.path.join('motif', f'{motif_up_list[j].replace(".", "x")}.png'), width=Inches(1.5))
-				else:
-					p.clear()
-					self.paragraph_format(p.add_run('上调磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
-			if '[motif_down]' in p.text:
-				if os.path.exists(os.path.join(self.groupvs, 'motif', 'down', 'motif_fold.txt')):
-					self.delete_paragraph(paragraphs, [i])
-					motif_down = pd.read_csv(os.path.join(self.groupvs, 'motif', 'down', 'motif_fold.txt'), sep='\t', header=None).head(3)
-					motif_down_list = motif_down.iloc[:, 1].tolist()
-					motif_down_table = document.add_table(rows=2,cols=len(motif_down_list),style='Table Grid')
-					self.table_center(motif_down_table)
-					self.move_table_after(motif_down_table, paragraphs[i - 1])
-					for j in range(len(motif_down_list)):
-						self.paragraph_format(motif_down_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_down_list[j]}'), size = 12, family ='Arial',bold=True)
-						run = motif_down_table.cell(1, j).paragraphs[0].add_run()
-						run.add_picture(os.path.join('motif', f'{motif_down_list[j].replace(".", "x")}.png'), width=Inches(1.5))
-				else:
-					p.clear()
-					self.paragraph_format(p.add_run('下调磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						self.delete_paragraph(paragraphs, list(range(i + 6, i + 13)))
+
+				if '[motif_up]' in p.text:
+					if os.path.exists(os.path.join(self.groupvs, 'motif', 'up', 'motif_fold.txt')):
+						self.delete_paragraph(paragraphs, [i])
+						motif_up = pd.read_csv(os.path.join(self.groupvs, 'motif', 'up', 'motif_fold.txt'), sep='\t', header=None).head(3)
+						motif_up_list = motif_up.iloc[:, 1].tolist()
+						motif_up_table = document.add_table(rows=2,cols=len(motif_up_list),style='Table Grid')
+						self.table_center(motif_up_table)
+						self.move_table_after(motif_up_table, paragraphs[i - 1])
+						for j in range(len(motif_up_list)):
+							self.paragraph_format(motif_up_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_up_list[j]}'), size = 10.5, family ='Arial',bold=True)
+							run = motif_up_table.cell(1, j).paragraphs[0].add_run()
+							run.add_picture(os.path.join(self.groupvs, 'motif', 'up', f'{motif_up_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+					else:
+						p.clear()
+						if 'p' in self.types:
+							self.paragraph_format(p.add_run('上调磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'a' in self.types:
+							self.paragraph_format(p.add_run('上调乙酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'g' in self.types:
+							self.paragraph_format(p.add_run('上调泛素化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'n' in self.types:
+							self.paragraph_format(p.add_run('上调糖基化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 's' in self.types:
+							self.paragraph_format(p.add_run('上调琥珀酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'y' in self.types:
+							self.paragraph_format(p.add_run('上调酪氨酸磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'm' in self.types:
+							self.paragraph_format(p.add_run('上调丙二酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+							
+				if '[motif_down]' in p.text:
+					if os.path.exists(os.path.join(self.groupvs, 'motif', 'down', 'motif_fold.txt')):
+						self.delete_paragraph(paragraphs, [i])
+						motif_down = pd.read_csv(os.path.join(self.groupvs, 'motif', 'down', 'motif_fold.txt'), sep='\t', header=None).head(3)
+						motif_down_list = motif_down.iloc[:, 1].tolist()
+						motif_down_table = document.add_table(rows=2,cols=len(motif_down_list),style='Table Grid')
+						self.table_center(motif_down_table)
+						self.move_table_after(motif_down_table, paragraphs[i - 1])
+						for j in range(len(motif_down_list)):
+							self.paragraph_format(motif_down_table.cell(0, j).paragraphs[0].add_run(f'Motif{str(j+1)}:{motif_down_list[j]}'), size = 10.5, family ='Arial',bold=True)
+							run = motif_down_table.cell(1, j).paragraphs[0].add_run()
+							run.add_picture(os.path.join(self.groupvs, 'motif', 'down', f'{motif_down_list[j].replace(".", "x")}.png'), width=Inches(1.5))
+					else:
+						p.clear()
+						if 'p' in self.types:
+							self.paragraph_format(p.add_run('下调磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'a' in self.types:
+							self.paragraph_format(p.add_run('下调乙酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'g' in self.types:
+							self.paragraph_format(p.add_run('下调泛素化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'n' in self.types:
+							self.paragraph_format(p.add_run('下调糖基化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 's' in self.types:
+							self.paragraph_format(p.add_run('下调琥珀酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'y' in self.types:
+							self.paragraph_format(p.add_run('下调酪氨酸磷酸化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
+						if 'm' in self.types:
+							self.paragraph_format(p.add_run('下调丙二酰化肽段无motif'), size = 10.5, family = u'微软雅黑', bold=True)
 
 
 	def save(self):

@@ -6,10 +6,14 @@
 	-t 项目类型 （必须参数）
 	-y或-n 是否出具无生信版报告(-y 是， -n 否，默认否)
 
-项目类型参数(l为labfree , i为Itraq , t为TMT, d为DIA, pl为磷酸化Labfree)
+项目类型参数(l：labfree; i：Itraq; t：TMT; d：DIA; pl：磷酸化Labfree; gl:泛素化labfree;
+			nl:糖基化labfree; sl:琥珀酰化labfree; yl:络氨酸磷酸化labfree; al:乙酰化labfree; ml:丙二酰化labfree;
+			pt：磷酸化TMT; at：乙酰化TMT)
 
 注：可执行 python ProReport.py --help查看帮助
 
+代码更新命令，直接执行：python ProReport.py 即可。
+
 若 pip install -r requirements.txt 安装失败，可单独安装各模块，例如：
-安装 win32com.client 命令
+安装 win32com 命令
 python -m pip install pypiwin32

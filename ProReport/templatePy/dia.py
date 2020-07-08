@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-     # should work even without -*-
 import os
 import re
 import sys
@@ -11,30 +12,23 @@ from templatePy.template import Template
 class DIA(Template):
 	def __init__(self, path):
 		os.chdir(path)
-		# try:
+
 		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
 		if information_file:
 			projectinfo = pd.read_excel(information_file[0], header=None)
 		else:
 			print('Error:该项目下无project information表')
-			exit()
+			sys.exit()
 		self.school = projectinfo.iloc[0, 1]
-		self.project_num = projectinfo.iloc[1, 1]
-		self.sample_type = projectinfo.iloc[2, 1]
+		self.project_name = projectinfo.iloc[1, 1]
+		self.project_num = projectinfo.iloc[2, 1]
 		self.sample_num = projectinfo.iloc[3, 1]
-		self.HPRP_num = projectinfo.iloc[4, 1]
-		self.DDA_protein = projectinfo.iloc[5, 1]
-		self.DDA_peptide = projectinfo.iloc[6, 1]
-		self.aver_peak = projectinfo.iloc[7, 1]
-		self.peak_capacity = projectinfo.iloc[8, 1]
-		self.CV_median = projectinfo.iloc[9, 1]
-		self.groupvs = projectinfo.iloc[10, 1]
-		self.experiment_method = projectinfo.iloc[11, 1]
-		self.DDA_method = projectinfo.iloc[12, 1]
-		self.DIA_method = projectinfo.iloc[13, 1]
+		self.groupvs = projectinfo.iloc[4, 1]
 
 		origi_record = pd.read_excel('原始记录.xls', sheet_name=0).fillna('')
 		self.diff_groupvs = origi_record[origi_record.loc[:, 'group'].str.contains('vs|oneway|twoway')]
+		tmp = self.diff_groupvs.iloc[:, 1:].applymap(lambda x: x if '-' in str(x) else int(float(x)))  # applymap对每个元素进行处理
+		self.diff_groupvs = pd.concat([self.diff_groupvs.iloc[:, 0], tmp], axis=1)
 		self.fc = float(origi_record[origi_record.iloc[:, 0] == '差异倍数'].iloc[0, 1])
 		self.total_pro_num = origi_record[origi_record.iloc[:, 0] == '附件1'].iloc[0, 1]
 		self.half_pro_num = origi_record[origi_record.iloc[:, 0] == '一半以上存在定量值'].iloc[0, 1]
@@ -61,57 +55,54 @@ class DIA(Template):
 		self.keggEnrich_top5, self.pathway = extract_top(kegg, 'keggEnrich')
 		self.keggID = extract_top(kegg, 'keggID')[0][0]
 
-		# except Exception as e:
-		# 	print(e)
-		# 	print('请检查project_information中信息是否填写正确')
-		# 	# raise
-		# 	exit()
 
 	def header(self, paragraphs):
 		today = str(datetime.date.today())
-		pa = paragraphs[14].add_run(self.school)
+		pa = paragraphs[10].add_run(self.school)
 		self.paragraph_format(pa, size=12, family=u'微软雅黑')
-		pa = paragraphs[19].add_run(self.project_num)
+		pa = paragraphs[11].add_run(self.project_name)
 		self.paragraph_format(pa, size=12, family=u'微软雅黑')
-		pa = paragraphs[20].add_run(today)
+		pa = paragraphs[12].add_run(self.project_num)
+		self.paragraph_format(pa, size=12, family=u'微软雅黑')
+		pa = paragraphs[13].add_run(today)
 		self.paragraph_format(pa, size=12, family="微软雅黑")
 
 	def table_data(self, tables):
-		self.paragraph_format(tables[2].cell(1,1).paragraphs[0].add_run(str(self.DDA_protein)), size=10, family=u'微软雅黑')
-		self.paragraph_format(tables[2].cell(1,2).paragraphs[0].add_run(str(self.DDA_peptide)), size=10, family=u'微软雅黑')
-
-		self.insert_table(self.pro_data, tables[3], size=10, family_ch=u'微软雅黑', family_en='微软雅黑')
-		self.insert_table(self.diff_groupvs, tables[6], size=10, family_ch=u'微软雅黑', family_en='微软雅黑')
+		# self.paragraph_format(tables[2].cell(1,1).paragraphs[0].add_run(str(self.DDA_protein)), size=10, family=u'微软雅黑')
+		# self.paragraph_format(tables[2].cell(1,2).paragraphs[0].add_run(str(self.DDA_peptide)), size=10, family=u'微软雅黑')
+		self.insert_table(self.pro_data, tables[2], size=10, family_ch=u'微软雅黑', family_en='微软雅黑')
+		self.insert_table(self.diff_groupvs, tables[5], size=10, family_ch=u'微软雅黑', family_en='微软雅黑')
 
 	def text_png_data(self, paragraphs):
-		color = 'blue'
-		if os.path.exists(os.path.join('WGCNA', 'Module_Enrichment', color)):
-			wgcna_enrich = os.path.join('WGCNA', 'Module_Enrichment', color)
-		else:
-			wgcna_enrich = os.listdir(os.path.join('WGCNA', 'Module_Enrichment'))[0]
-			color = os.path.basename(wgcna_enrich)	
-		
+		if os.path.exists('WGCNA'):
+			color = 'blue'
+			if os.path.exists(os.path.join('WGCNA', 'Module_Enrichment', color)):
+				wgcna_enrich = os.path.join('WGCNA', 'Module_Enrichment', color)
+			else:
+				wgcna_enrich = os.listdir(os.path.join('WGCNA', 'Module_Enrichment'))[0]
+				color = os.path.basename(wgcna_enrich)
+
+		cv_png = [i for i in os.listdir(os.path.join('Appendix_A', '附件3')) if re.search('cv.*.png', i, re.I)]
+		if cv_png:
+			CV_median = cv_png[0].split(' ')[1].replace('%.png','')
+
 		for i, p in enumerate(paragraphs):
 			if 'groupvs' in p.text:
 				self.text_replace(p, ['groupvs'], [self.groupvs])
-			if 'sample_type' in p.text:
-				self.text_replace(p, ['sample_type', 'sample_num', 'HPRP_num', 'DDA_protein'], [self.sample_type, str(self.sample_num), str(self.HPRP_num), str(self.DDA_protein)], family_ch=u'微软雅黑', family_en='微软雅黑')
-			if 'aver_peak' in p.text:
-				if float(self.aver_peak) * 10 % 10 == 0:
-					self.text_replace(p, ['aver_peak'], [str(int(self.aver_peak))], family_ch=u'微软雅黑', family_en='微软雅黑')
-				else:
-					self.text_replace(p, ['aver_peak'], [str(self.aver_peak)], family_ch=u'微软雅黑', family_en='微软雅黑')
-			if 'peak_capacity' in p.text:
-				if float(self.peak_capacity) * 10 % 10 == 0:
-					self.text_replace(p, ['peak_capacity'], [str(int(self.peak_capacity))], family_ch=u'微软雅黑', family_en='微软雅黑')
-				else:
-					self.text_replace(p, ['peak_capacity'], [str(self.peak_capacity)], family_ch=u'微软雅黑', family_en='微软雅黑')
+			if 'sample_num' in p.text:
+				self.text_replace(p, ['sample_num'], [str(self.sample_num)], family_ch=u'微软雅黑', family_en='微软雅黑')
 			if 'CV_median' in p.text:
-				self.text_replace(p, ['CV_median'], [str(self.CV_median)], family_ch=u'微软雅黑', family_en='微软雅黑')
+				self.text_replace(p, ['CV_median'], [CV_median], family_ch=u'微软雅黑', family_en='微软雅黑')
 			if 'total_pro_num' in p.text:
-				self.text_replace(p, ['total_pro_num', 'half_pro_num'], [str(self.total_pro_num), str(self.half_pro_num)], family_ch=u'微软雅黑', family_en='微软雅黑')
+				self.text_replace(p, ['total_pro_num', 'half_pro_num'], [str(int(self.total_pro_num)), str(int(self.half_pro_num))], family_ch=u'微软雅黑', family_en='微软雅黑')
+			# if 'upRatio' in p.text:
+			# 	self.text_replace(p, ['upRatio', 'upRatio', 'downRatio'], [str(self.fc), str(self.fc), str(round(1 / self.fc, 2))], family_ch=u'微软雅黑', family_en='微软雅黑')
 			if 'upRatio' in p.text:
-				self.text_replace(p, ['upRatio', 'upRatio', 'downRatio'], [str(self.fc), str(self.fc), str(round(1 / self.fc, 2))], family_ch=u'微软雅黑', family_en='微软雅黑')
+				find_num = len(re.findall('upRatio', p.text))
+				self.text_replace(p, ['upRatio'] * find_num, [str(self.fc)] * find_num)
+			if 'downRatio' in p.text:
+				find_num = len(re.findall('downRatio', p.text))
+				self.text_replace(p, ['downRatio'] * find_num, [str(round(1 / self.fc, 2))] * find_num)
 			if 'groupvs' in p.text:
 				self.text_replace(p, ['groupvs'], [self.groupvs])
 			if 'BP-TOP5' in p.text:
@@ -138,12 +129,6 @@ class DIA(Template):
 					self.text_replace(p, ['KeggEnrich-top5等重要通路发生了显著变化', 'KeggEnrich-top1'], ['该比较组没有P值小于0.05的显著性富集通路', self.pathway])
 			if 'expr_sample_type' in p.text:
 				self.text_replace(p, ['expr_sample_type'], [self.sample_type], size=12, family_ch=u'微软雅黑', family_en='微软雅黑', bold=True)
-			if 'Experiment_method' in p.text:
-				self.text_replace(p, ['Experiment_method'], [self.experiment_method], family_ch=u'微软雅黑', family_en='微软雅黑')
-			if 'DDA_method' in p.text:
-				self.text_replace(p, ['DDA_method'], [self.DDA_method], family_ch=u'微软雅黑', family_en='微软雅黑')
-			if 'DIA_method' in p.text:
-				self.text_replace(p, ['DIA_method'], [self.DIA_method], family_ch=u'微软雅黑', family_en='微软雅黑')
 
 			if "[Protein_Group_Profile.png]" in p.text:
 				pro_groupfile = [i for i in os.listdir(os.path.join('Appendix_A', '附件3')) if re.search('profiles.*.png', i, re.I)]
@@ -162,7 +147,7 @@ class DIA(Template):
 			if "[Protein_FDR.png]" in p.text:
 				self.insert_png(p, "[Protein_FDR.png]", os.path.join('Appendix_A', '附件3', 'Protein FDR.png'))
 			if "[CV.png]" in p.text:
-				cv_png = [i for i in os.listdir(os.path.join('Appendix_A', '附件3')) if re.search('cv.*.png', i, re.I)]
+				# cv_png = [i for i in os.listdir(os.path.join('Appendix_A', '附件3')) if re.search('cv.*.png', i, re.I)]
 				if cv_png:
 					self.insert_png(p, "[CV.png]", os.path.join('Appendix_A', '附件3', cv_png[0]))
 				else:
@@ -182,9 +167,12 @@ class DIA(Template):
 				if replace == False:
 					self.text_replace(p, ["[venn.png]"],['无venn图'], family_ch=u'微软雅黑', family_en='微软雅黑')
 			if '[Ratio_Distribution]' in p.text:
-				self.insert_png(p, '[Ratio_Distribution]', os.path.join('Ratio_distribution', f'Ratio_distribution_{self.groupvs}.png'))
+				self.insert_png(p, '[Ratio_Distribution]', os.path.join('Ratio_distribution', f'Ratio_Distribution_{self.groupvs}.png'))
 			if "[cluster.png]" in p.text:
-				self.insert_png(p, "[cluster.png]", os.path.join(self.groupvs, 'CLUSTER', 'cluster1.png'))
+				if os.path.exists(os.path.join(self.groupvs, 'cluster')):
+					self.insert_png(p, "[cluster.png]", os.path.join(self.groupvs, 'cluster', 'cluster1.png'))
+				elif os.path.exists(os.path.join(self.groupvs, 'CLUSTER')):
+					self.insert_png(p, "[cluster.png]", os.path.join(self.groupvs, 'CLUSTER', 'cluster1.png'))
 			if "[go_enrichment.png]" in p.text:
 				self.insert_png(p, "[go_enrichment.png]", os.path.join(self.groupvs, 'go', 'GO_Enrichment.png'))
 			if "[KEGG_Enrichment.png]" in p.text:
@@ -195,30 +183,31 @@ class DIA(Template):
 				self.insert_png(p, "[ppi.png]", os.path.join(self.groupvs, 'ppi', 'ppi.png'))
 			if "[pca.png]" in p.text:
 				self.insert_png(p, "[pca.png]", os.path.join('PCA', 'PCA_samples.png'))
-			if "[PlotModule.png]" in p.text:
-				self.insert_png(p, "[PlotModule.png]", os.path.join('WGCNA', 'Module', 'PlotModule.png'))
-			if "[Module-trait.relationships.png]" in p.text:
-				self.insert_png(p, "[Module-trait.relationships.png]", os.path.join('WGCNA', 'Module', 'Module-trait.relationships.png'))
-			if "[Eigengene.dendrogram.heatmap.png]" in p.text:
-				self.insert_png(p, "[Eigengene.dendrogram.heatmap.png]", os.path.join('WGCNA', 'Eigengene.dendrogram.heatmap.png'))
-			if "[ProteinNetwork_heatmap_plot.png]" in p.text:
-				self.insert_png(p, "[ProteinNetwork_heatmap_plot.png]", os.path.join('WGCNA', 'Module', 'ProteinNetwork_heatmap_plot.png'))
-			if "[module.heatmap_barplot.png]" in p.text:
-				png_path = os.path.join('WGCNA', 'Protein_ModulePlot')
-				png = [i for i in os.listdir(png_path) if re.search(color, i, re.I)]
-				if png:
-					self.insert_png(p, "[module.heatmap_barplot.png]", os.path.join(png_path, png[0]))
-			if "[WGCNA_GO_enrichment]" in p.text:
-				self.insert_png(p, "[WGCNA_GO_enrichment]", os.path.join(wgcna_enrich, 'go', 'GO_Enrichment.png'))
-			if "[WGCNA_KEGG_enrichment]" in p.text:
-				self.insert_png(p, "[WGCNA_KEGG_enrichment]", os.path.join(wgcna_enrich, 'kegg', 'KEGG_Enrichment.png'))
-			if "[moduel_GS_vs_MM]" in p.text:
-				protein_corr = [i for i in os.listdir(os.path.join('WGCNA', 'Protein_relationship')) if os.path.isdir(os.path.join('WGCNA', 'Protein_relationship', i))]
-				self.insert_png(p, "[moduel_GS_vs_MM]", os.path.join('WGCNA', 'Protein_relationship', protein_corr[0], f'{color}.moduel.GS_vs_MM.png'))
+			if os.path.exists('WGCNA'):
+				if "[PlotModule.png]" in p.text:
+					self.insert_png(p, "[PlotModule.png]", os.path.join('WGCNA', 'Module', 'PlotModule.png'))
+				if "[Module-trait.relationships.png]" in p.text:
+					self.insert_png(p, "[Module-trait.relationships.png]", os.path.join('WGCNA', 'Module', 'Module-trait.relationships.png'))
+				if "[Eigengene.dendrogram.heatmap.png]" in p.text:
+					self.insert_png(p, "[Eigengene.dendrogram.heatmap.png]", os.path.join('WGCNA', 'Eigengene.dendrogram.heatmap.png'))
+				if "[ProteinNetwork_heatmap_plot.png]" in p.text:
+					self.insert_png(p, "[ProteinNetwork_heatmap_plot.png]", os.path.join('WGCNA', 'Module', 'ProteinNetwork_heatmap_plot.png'))
+				if "[module.heatmap_barplot.png]" in p.text:
+					png_path = os.path.join('WGCNA', 'Protein_ModulePlot')
+					png = [i for i in os.listdir(png_path) if re.search(color, i, re.I)]
+					if png:
+						self.insert_png(p, "[module.heatmap_barplot.png]", os.path.join(png_path, png[0]))
+				if "[WGCNA_GO_enrichment]" in p.text:
+					self.insert_png(p, "[WGCNA_GO_enrichment]", os.path.join(wgcna_enrich, 'go', 'GO_Enrichment.png'))
+				if "[WGCNA_KEGG_enrichment]" in p.text:
+					self.insert_png(p, "[WGCNA_KEGG_enrichment]", os.path.join(wgcna_enrich, 'kegg', 'KEGG_Enrichment.png'))
+				if "[moduel_GS_vs_MM]" in p.text:
+					protein_corr = [i for i in os.listdir(os.path.join('WGCNA', 'Protein_relationship')) if os.path.isdir(os.path.join('WGCNA', 'Protein_relationship', i))]
+					self.insert_png(p, "[moduel_GS_vs_MM]", os.path.join('WGCNA', 'Protein_relationship', protein_corr[0], f'{color}.moduel.GS_vs_MM.png'))
 
 	def save(self, document):
-		document.save(f'{self.project_num}{self.school}{self.sample_type}DIA报告.docx')
-		print(f'报告生成完成，报告路径为：{os.path.join(os.getcwd(), f"{self.project_num}{self.school}{self.sample_type}DIA报告.docx")}')
+		document.save(f'{self.project_num}{self.school}DIA报告.docx')
+		print('报告生成完成')
 
 
 

@@ -7,21 +7,13 @@ from templatePy.template import Template
 class Lipids(Template):
 	def __init__(self, path):
 		os.chdir(path)
-		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
+		information_file = [i for i in os.listdir('.') if re.search('weight', i, re.I)]
 		if information_file:
-			self.projectinfo = pd.read_excel(information_file[0], header=None)
+			self.projectinfo = pd.read_excel(information_file[0], header=None, sheet_name=1)
 		else:
-			print('Error:该项目下无basic information表')
+			print('Error:该项目下无weight表')
 			exit()
 		self.groupvs = self.projectinfo.iloc[3, 1]
-		weight = self.projectinfo.iloc[4, 1]
-		weight_num = re.search('[0-9]+', weight).group()
-		if re.search('[a-zA-Z]+', weight):
-			weight_unit = re.search('[a-zA-Z]+', weight).group()
-		else:
-			print('Error:basic information表中样品称重未填写单位')
-			exit()
-		self.sample_weight = f'{weight_num}±{int(float(weight_num) * 0.1)}{weight_unit}'
 
 	def header(self, paragraphs, start_row=6):
 		today = str(datetime.date.today())
@@ -36,7 +28,8 @@ class Lipids(Template):
 		self.paragraph_format(pa, size=14, family="Arial")
 
 	def table_data(self, tables):
-		sample_info = self.projectinfo.iloc[:,3:]
+		sample_info = self.projectinfo.iloc[:,2:]
+		sample_info.dropna(axis=0,how='any', inplace=True)
 		sample_info.drop(0, inplace=True)
 		self.insert_table(sample_info, tables[0], size=12, family_en='Times New Roman')
 		class_species = pd.read_excel('Pic_class_species.xlsx')
@@ -58,8 +51,6 @@ class Lipids(Template):
 	def text_png_data(self, paragraphs):
 		pie12 = [i for i in os.listdir(os.path.join('报告及附件', '附件2 Result', '03. Lipid Composition Analysis', self.groupvs)) if re.search('pie.*.png', i, re.I)]
 		for i, p in enumerate(paragraphs):
-			if 'weightplus10perctent' in p.text:
-				self.text_replace(p, ['weightplus10perctent'], [self.sample_weight], size=12, family_ch=u'黑体', family_en='Times New Roman')
 			if 'groupvs' in p.text:
 				self.text_replace(p, ['groupvs'], [self.groupvs], size=12, family_ch=u'黑体', family_en='Times New Roman')
 			if '[LipidNumber]' in p.text:

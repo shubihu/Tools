@@ -211,7 +211,7 @@ class Template:
 			pa = paragraphs[i+5].add_run(self.projectinfo.iloc[i, 1])
 			self.paragraph_format(pa, size=16, family=u'微软雅黑')
 		pa = paragraphs[start_row - 2].add_run(self.today)
-		self.paragraph_format(pa, size=14, family=u'微软雅黑')
+		self.paragraph_format(pa, size=16, family=u'微软雅黑')
 
 	# =============================================================================
 	# 插入表格数据
@@ -305,16 +305,24 @@ class Template:
 				self.insert_png(p, "[anosim.png]", f"Result/05_Beta_diversity/anosim/{self.groupvs}.png")
 
 			if "[cladogram.png]" in p.text:
-				self.insert_png(p, "[cladogram.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/{self.groupvs}.cla.png")
+				is_replace = self.insert_png(p, "[cladogram.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/Cla.png")
+				if is_replace == False:
+					self.text_replace(p, ['[cladogram.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[Lda_score.png]" in p.text:
-				self.insert_png(p, "[Lda_score.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/{self.groupvs}.png")
+				is_replace = self.insert_png(p, "[Lda_score.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/LDA.png")
+				if is_replace == False:
+					self.text_replace(p, ['[Lda_score.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[biomarker.png]" in p.text:
-				self.insert_png(p, "[biomarker.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/biomarker.png")
+				is_replace = self.insert_png(p, "[biomarker.png]", f"Result/06_Differential_analysis/LefSe/{self.groupvs}/biomarker.png")
+				if is_replace == False:
+					self.text_replace(p, ['[biomarker.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[stamp.png]" in p.text:
-				self.insert_png(p, "[stamp.png]", f"Result/06_Differential_analysis/STAMP/{self.groupvs}/t-test.png")
+				is_replace = self.insert_png(p, "[stamp.png]", f"Result/06_Differential_analysis/STAMP/{self.groupvs}/t-test.png")
+				if is_replace == False:
+					self.text_replace(p, ['[stamp.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[pca12.png]" in p.text:
 				self.insert_png(p, "[pca12.png]", f'Result/07_FunctionPrediction/KEGG/PCA/{self.groupvs}/pca.png',
@@ -329,22 +337,34 @@ class Template:
 														'Result/07_FunctionPrediction/COG/Heatmap/cog_predicted_L2.png')
 
 			if "[kegg1.png]" in p.text:
-				self.insert_png(p, "[kegg1.png]", f'Result/07_FunctionPrediction/KEGG/LEfSe/{self.groupvs}/L2.png')
+				is_replace = self.insert_png(p, "[kegg1.png]", f'Result/07_FunctionPrediction/KEGG/LEfSe/{self.groupvs}/LDA.png')
+				if is_replace == False:
+					self.text_replace(p, ['[kegg1.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[kegg2.png]" in p.text:
-				self.insert_png(p, "[kegg2.png]", f'Result/07_FunctionPrediction/KEGG/LEfSe/{self.groupvs}/biomarker.png')
+				is_replace = self.insert_png(p, "[kegg2.png]", f'Result/07_FunctionPrediction/KEGG/LEfSe/{self.groupvs}/biomarker.png')
+				if is_replace == False:
+					self.text_replace(p, ['[kegg2.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[cog1.png]" in p.text:
-				self.insert_png(p, "[cog1.png]", f'Result/07_FunctionPrediction/COG/LEfSe/{self.groupvs}/L2.png')
+				is_replace = self.insert_png(p, "[cog1.png]", f'Result/07_FunctionPrediction/COG/LEfSe/{self.groupvs}/LDA.png')
+				if is_replace == False:
+					self.text_replace(p, ['[cog1.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[cog2.png]" in p.text:
-				self.insert_png(p, "[cog2.png]", f'Result/07_FunctionPrediction/COG/LEfSe/{self.groupvs}/biomarker.png')
+				is_replace = self.insert_png(p, "[cog2.png]", f'Result/07_FunctionPrediction/COG/LEfSe/{self.groupvs}/biomarker.png')
+				if is_replace == False:
+					self.text_replace(p, ['[cog2.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[stamp1.png]" in p.text:
-				self.insert_png(p, "[stamp1.png]", f'Result/07_FunctionPrediction/KEGG/STAMP/{self.groupvs}/t-test.png')
+				is_replace = self.insert_png(p, "[stamp1.png]", f'Result/07_FunctionPrediction/KEGG/STAMP/{self.groupvs}/t-test.png')
+				if is_replace == False:
+					self.text_replace(p, ['[stamp1.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 			if "[stamp2.png]" in p.text:
-				self.insert_png(p, "[stamp2.png]", f'Result/07_FunctionPrediction/COG/STAMP/{self.groupvs}/t-test.png')
+				is_replace = self.insert_png(p, "[stamp2.png]", f'Result/07_FunctionPrediction/COG/STAMP/{self.groupvs}/t-test.png')
+				if is_replace == False:
+					self.text_replace(p, ['[stamp2.png]'], ['该比较组无此图'], family_en=u'微软雅黑')
 
 
 	def save(self, document):
@@ -437,10 +457,10 @@ class Template:
 		stamp_list = [f'{i}/t-test.png' for i in os.listdir(os.path.join('Result', '06_Differential_analysis', 'STAMP')) if '_vs_' in i]
 		kegg_pca = [f'{i}/pca.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'PCA'))]
 		cog_pca = [f'{i}/pca.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'PCA'))]
-		kegg_lda = [f'{i}/L2.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'LefSe'))]
-		kegg_biomarker = [f'{i}/biomarker.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'LefSe'))]
-		cog_lda = [f'{i}/L2.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'LefSe'))]
-		cog_biomarker = [f'{i}/biomarker.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'LefSe'))]
+		kegg_lda = [f'{i}/LDA.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'LEfSe'))]
+		kegg_biomarker = [f'{i}/biomarker.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'LEfSe'))]
+		cog_lda = [f'{i}/LDA.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'LEfSe'))]
+		cog_biomarker = [f'{i}/biomarker.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'LEfSe'))]
 		kegg_stamp = [f'{i}/t-test.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'KEGG', 'STAMP'))]
 		cog_stamp = [f'{i}/t-test.png' for i in os.listdir(os.path.join('Result', '07_FunctionPrediction', 'COG', 'STAMP'))]
 
@@ -460,10 +480,10 @@ class Template:
 			f.write(self.table_header_js('name3_2', 'otu_table_header', self.otu_table, '#FFC1C1'))
 			f.write(self.table_js('name3_2', 'otu_table', self.otu_table))
 			f.write(self.multigroups('name3_2_2', 0, 1,  '../../02_OTU_Taxa/Venn/', 'venn', venn_list, '\/venn.png'))
-			f.write('$("#name3_3_2 .albumSlider .fullview a").attr("href", "' + f'../../03_Community/taxa_tree/sample_tree/{self.sample_tree}' + '");')
-			f.write('$("#name3_3_2 .albumSlider .fullview img").attr("src", "' + f'../../03_Community/taxa_tree/sample_tree/{self.sample_tree}' + '");')
+			f.write('$("#name3_3_2 .albumSlider:eq(0) .fullview a").attr("href", "' + f'../../03_Community/taxa_tree/sample_tree/{self.sample_tree}' + '");')
+			f.write('$("#name3_3_2 .albumSlider:eq(0) .fullview img").attr("src", "' + f'../../03_Community/taxa_tree/sample_tree/{self.sample_tree}' + '");')
 			f.write(self.table_js('name3_4', 'alpha', self.alpha_index))
-			f.write(self.multigroups('name3_5_2', 0, 1, '../../05_Beta_diversity/PCA/', 'pca', pca_list, 'pca.png'))
+			f.write(self.multigroups('name3_5_2', 0, 1, '../../05_Beta_diversity/PCA/', 'pca', pca_list, '\/pca.png'))
 			f.write(self.multigroups('name3_5_3', 0, 1, '../../05_Beta_diversity/PCoA/', 'weighted_pcoa', weighted_pcoa, '\/weighted_unifrac_dmPCoA.png'))
 			f.write(self.multigroups('name3_5_3', 1, 1, '../../05_Beta_diversity/PCoA/', 'unweighted_pcoa', unweighted_pcoa, '\/unweighted_unifrac_dmPCoA.png'))
 			f.write(self.multigroups('name3_5_4', 0, 1, '../../05_Beta_diversity/NMDS/', 'nmds', nmds_list, '\/NMDS.png'))
@@ -480,10 +500,10 @@ class Template:
 			f.write(self.table_js('name3_8_2', 'cog', self.cog))
 			f.write(self.multigroups('name3_8_3', 0, 1, '../../07_FunctionPrediction/KEGG/PCA/', 'kegg_pca', kegg_pca, '\/pca.png'))
 			f.write(self.multigroups('name3_8_3', 1, 1, '../../07_FunctionPrediction/COG/PCA/', 'cog_pca', cog_pca, '\/pca.png'))
-			f.write(self.multigroups('name3_8_6', 0, 1, '../../07_FunctionPrediction/KEGG/LefSe/', 'kegg_lda', kegg_lda, '\/L2.png'))
-			f.write(self.multigroups('name3_8_6', 1, 1, '../../07_FunctionPrediction/KEGG/LefSe/', 'kegg_biomarker', kegg_biomarker, '\/biomarker.png'))
-			f.write(self.multigroups('name3_8_6', 2, 1, '../../07_FunctionPrediction/COG/LefSe/', 'cog_lda', cog_lda, '\/L2.png'))
-			f.write(self.multigroups('name3_8_6', 3, 1, '../../07_FunctionPrediction/COG/LefSe/', 'cog_biomarker', cog_biomarker, '\/biomarker.png'))
+			f.write(self.multigroups('name3_8_6', 0, 1, '../../07_FunctionPrediction/KEGG/LEfSe/', 'kegg_lda', kegg_lda, '\/LDA.png'))
+			f.write(self.multigroups('name3_8_6', 1, 1, '../../07_FunctionPrediction/KEGG/LEfSe/', 'kegg_biomarker', kegg_biomarker, '\/biomarker.png'))
+			f.write(self.multigroups('name3_8_6', 2, 1, '../../07_FunctionPrediction/COG/LEfSe/', 'cog_lda', cog_lda, '\/LDA.png'))
+			f.write(self.multigroups('name3_8_6', 3, 1, '../../07_FunctionPrediction/COG/LEfSe/', 'cog_biomarker', cog_biomarker, '\/biomarker.png'))
 			f.write(self.multigroups('name3_8_7', 0, 1, '../../07_FunctionPrediction/KEGG/STAMP/', 'kegg_stamp', kegg_stamp, '\/t-test.png'))
 			f.write(self.multigroups('name3_8_7', 1, 1, '../../07_FunctionPrediction/COG/STAMP/', 'cog_stamp', cog_stamp, '\/t-test.png'))
 
