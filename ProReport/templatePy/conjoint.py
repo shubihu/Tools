@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-     # should work even without -*-
+
 import os
 import re
 import sys
@@ -17,14 +18,23 @@ class Conjoint(Template):
 
 		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
 		if information_file:
-			projectinfo = pd.read_excel(information_file[0], header=None)
+			if 'xls' in information_file[0]:
+				projectinfo = pd.read_excel(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('csv'):
+				projectinfo = pd.read_csv(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('txt'):
+				projectinfo = pd.read_csv(information_file[0], index_col=0, sep='\t', header=None)
 		else:
 			print('Error:该项目下无project information表')
 			sys.exit()
-		self.school = projectinfo.iloc[0, 1]
-		self.project_name = projectinfo.iloc[1, 1]
-		self.project_num = projectinfo.iloc[2, 1]
-		self.groupvs = projectinfo.iloc[3, 1]
+
+		index_list = projectinfo.index.tolist()
+		groupvs = [i for i in index_list if re.search('比较组', i)]
+
+		self.school = projectinfo.loc['项目名称'][1]
+		self.project_name = projectinfo.loc['委托单位'][1]
+		self.project_num = projectinfo.loc['项目编号'][1]
+		self.groupvs = projectinfo.loc[groupvs[0]][1]
 
 		pro_count = pd.read_excel(os.path.join('Statistics', '表1-关联蛋白数量统计表.xlsx'))
 		self.pro_count1 = pro_count.iloc[:, :5]

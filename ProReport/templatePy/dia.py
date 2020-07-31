@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-     # should work even without -*-
+
 import os
 import re
 import sys
@@ -15,15 +16,24 @@ class DIA(Template):
 
 		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
 		if information_file:
-			projectinfo = pd.read_excel(information_file[0], header=None)
+			if 'xls' in information_file[0]:
+				projectinfo = pd.read_excel(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('csv'):
+				projectinfo = pd.read_csv(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('txt'):
+				projectinfo = pd.read_csv(information_file[0], index_col=0, sep='\t', header=None)
 		else:
 			print('Error:该项目下无project information表')
 			sys.exit()
-		self.school = projectinfo.iloc[0, 1]
-		self.project_name = projectinfo.iloc[1, 1]
-		self.project_num = projectinfo.iloc[2, 1]
-		self.sample_num = projectinfo.iloc[3, 1]
-		self.groupvs = projectinfo.iloc[4, 1]
+
+		index_list = projectinfo.index.tolist()
+		groupvs = [i for i in index_list if re.search('比较组', i)]
+
+		self.school = projectinfo.loc['委托单位'][1]
+		self.project_name = projectinfo.loc['项目名称'][1]
+		self.project_num = projectinfo.loc['项目编号'][1]
+		self.sample_num = projectinfo.loc['样品数量'][1]
+		self.groupvs = projectinfo.loc[groupvs[0]][1]
 
 		origi_record = pd.read_excel('原始记录.xls', sheet_name=0).fillna('')
 		self.diff_groupvs = origi_record[origi_record.loc[:, 'group'].str.contains('vs|oneway|twoway')]
@@ -109,17 +119,17 @@ class DIA(Template):
 				if all([len(self.bp_top) == 0, len(self.mf_top) == 0, len(self.cc_top) == 0]):
 					self.text_replace(p, ['，发生了显著性变化'], [''])
 				if self.bp_top:
-					self.text_replace(p, ['BP-TOP5'], [self.bp_top])
+					self.text_replace(p, ['BP-TOP5'], [', '.join(self.bp_top)])
 				else:
 					self.text_replace(p, ['BP-TOP5等重要生物学过程'], ['无P值小于0.05的显著性生物学过程'])
 			if 'MF-TOP5' in p.text:
 				if self.mf_top:
-					self.text_replace(p, ['MF-TOP5'], [self.mf_top])
+					self.text_replace(p, ['MF-TOP5'], [', '.join(self.mf_top)])
 				else:
 					self.text_replace(p, ['MF-TOP5等分子功能'], ['无P值小于0.05的显著性分子功能'])
 			if 'CC-TOP5' in p.text:
 				if self.cc_top:
-					self.text_replace(p, ['CC-TOP5'], [self.cc_top])
+					self.text_replace(p, ['CC-TOP5'], [', '.join(self.cc_top)])
 				else:
 					self.text_replace(p, ['CC-TOP5等定位蛋白质'], ['无P值小于0.05的显著性定位蛋白'])
 			if 'KeggEnrich-top5' in p.text:

@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-     # should work even without -*-
+
 import os
 import sys
 import re
@@ -24,7 +25,7 @@ def extract_top(data, func, num=5):
 		if func == 'BP':
 			data = data['Enrichment']
 			data = data[data['Category'] == 'P'].head(num)
-			top = data['Term'].tolist()		
+			top = data['Term'].tolist()
 		elif func == 'MF':
 			data = data['Enrichment']
 			data = data[data['Category'] == 'F'].head(num)
@@ -61,13 +62,25 @@ class Template:
 
 		information_file = [i for i in os.listdir('.') if re.search('infor?mation', i, re.I)]
 		if information_file:
-			self.projectinfo = pd.read_excel(information_file[0], header=None)
+			if 'xls' in information_file[0]:
+				self.projectinfo = pd.read_excel(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('csv'):
+				self.projectinfo = pd.read_csv(information_file[0], index_col=0, header=None)
+			elif information_file[0].endswith('txt'):
+				self.projectinfo = pd.read_csv(information_file[0], index_col=0, sep='\t', header=None)
 		else:
 			raise Exception('Error:该项目下无project_information表')
 
-		self.species = self.projectinfo.iloc[3, 1]
-		self.groupvs = str(self.projectinfo.iloc[4, 1])
-		self.database = self.projectinfo.iloc[5, 1]
+		# index_list = ['项目名称', '委托单位', '项目编号', '物种', '比较组', '数据库', '样品组数', '每组生物学重复数', ' 样品总数']
+		# self.projectinfo.index = index_list
+		index_list = self.projectinfo.index.tolist()
+		groupvs = [str(i) for i in index_list if re.search('比较组', str(i))]
+		# index_list[index_list.index(groupvs[0])] = '比较组'
+		# self.projectinfo.index = index_list
+
+		self.species = self.projectinfo.loc['物种'][1]
+		self.groupvs = str(self.projectinfo.loc[groupvs[0]][1])
+		self.database = self.projectinfo.loc['数据库'][1]
 		
 		self.sampleInfo = pd.read_csv('samples.txt', sep='\t', header=None)
 		self.origi_record = pd.read_excel('原始记录.xlsx', sheet_name=1).fillna('')
@@ -96,8 +109,8 @@ class Template:
 			self.kegg = pd.read_excel(kegg_file, sheet_name=None)
 			self.keggEnrich_top5, self.pathway = extract_top(self.kegg, 'keggEnrich')
 		else:
-			self.go, self.goEnrich_top5 = None, None
-			self.kegg, self.keggEnrich_top5, self.pathway = None, None, None
+			self.go = self.goEnrich_top5 = None
+			self.kegg = self.keggEnrich_top5 = self.pathway = None
 
 	
 	def paragraph_format(self, pa, size, family, r = 0x00, g = 0x00, b = 0x00, bold = None):
@@ -132,7 +145,7 @@ class Template:
 		p.clear()
 		for i in range(len(text_list) - 1):
 			self.paragraph_format(p.add_run(text_list[i]), size = size, family = family_ch, bold=bold)
-			if 'P值小于0.05' in text2_list[i]:
+			if '无P值小于0.05' in text2_list[i]:
 				self.paragraph_format(p.add_run(text2_list[i]), size = size, family = family_ch, bold=bold)
 			else:
 				self.paragraph_format(p.add_run(text2_list[i]), size = size, family = family_en, bold=bold)
@@ -227,13 +240,12 @@ class Template:
 
 	def header(self, paragraphs, start_row=10):
 		today = str(datetime.date.today())
-		for i in range(3):
-			if i in range(0, 2):
-				pa = paragraphs[i + start_row].add_run(self.projectinfo.iloc[i, 1])
-				self.paragraph_format(pa, size=14, family=u'微软雅黑', bold=True)
-			if i in range(2, 3):
-				pa = paragraphs[i + start_row].add_run(self.projectinfo.iloc[i, 1])
-				self.paragraph_format(pa, size=14, family="Arial", bold=True) #### family = 'Calibri'
+		pa = paragraphs[start_row].add_run(self.projectinfo.loc['项目名称'][1])
+		self.paragraph_format(pa, size=14, family=u'微软雅黑', bold=True)
+		pa = paragraphs[start_row + 1].add_run(self.projectinfo.loc['委托单位'][1])
+		self.paragraph_format(pa, size=14, family=u'微软雅黑', bold=True)
+		pa = paragraphs[start_row + 2].add_run(self.projectinfo.loc['项目编号'][1])
+		self.paragraph_format(pa, size=14, family="Arial", bold=True) #### family = 'Calibri'
 		pa = paragraphs[start_row + 3].add_run(today)
 		self.paragraph_format(pa, size=14, family="Arial", bold=True)
 
@@ -285,8 +297,10 @@ class Template:
 			proNum = [protein[i].count() for i in LFQ_list]
 			proNum.insert(0, protein['Protein'].count())
 			database_list = [self.database] * len(sample)
-			data_frame_dict = OrderedDict({'database': database_list, 'sample': sample, 'proNum': proNum})
-			data_frame = pd.DataFrame(data_frame_dict)
+			data_frame = pd.DataFrame(columns=['database', 'sample', 'proNum'])
+			data_frame['database'] = database_list
+			data_frame['sample'] = sample
+			data_frame['proNum'] = proNum
 			self.insert_table(data_frame, tables[6])
 			self.insert_table(record_diff, tables[7])
 			pa = tables[8].cell(8,1).paragraphs[0].add_run(self.database)
@@ -338,7 +352,7 @@ class Template:
 			cc_top = extract_top(self.go, 'CC')[0]
 			map2query_top5 = extract_top(self.kegg, 'map2query')[0]
 		else:
-			keggID, bp_top, mf_top, cc_top, map2query_top5 = '', '', '', '', ''
+			keggID = bp_top = mf_top = cc_top = map2query_top5 = ''
 		groupNum = str(len(set(self.sampleInfo.iloc[:,2])))
 		Num = list(Counter(self.sampleInfo.iloc[:,2]).values())
 		Num = [str(i) for i in Num]
@@ -367,17 +381,17 @@ class Template:
 				if all([len(bp_top) == 0, len(mf_top) == 0, len(cc_top) == 0]):
 					self.text_replace(p, ['，发生了显著性变化'], [''])
 				if bp_top:
-					self.text_replace(p, ['BP-TOP5'], [bp_top])
+					self.text_replace(p, ['BP-TOP5'], [', '.join(bp_top)])
 				else:
 					self.text_replace(p, ['BP-TOP5等重要生物学过程'], ['无P值小于0.05的显著性生物学过程'])
 			if 'MF-TOP5' in p.text:
 				if mf_top:
-					self.text_replace(p, ['MF-TOP5'], [mf_top])
+					self.text_replace(p, ['MF-TOP5'], [', '.join(mf_top)])
 				else:
 					self.text_replace(p, ['MF-TOP5等分子功能'], ['无P值小于0.05的显著性分子功能'])
 			if 'CC-TOP5' in p.text:
 				if cc_top:
-					self.text_replace(p, ['CC-TOP5'], [cc_top])
+					self.text_replace(p, ['CC-TOP5'], [', '.join(cc_top)])
 				else:
 					self.text_replace(p, ['CC-TOP5等定位蛋白质'], ['无P值小于0.05的显著性定位蛋白'])
 			if 'kegg-map2query-top5' in p.text:
@@ -387,7 +401,7 @@ class Template:
 					self.text_replace(p, ['KeggEnrich-top5', 'KeggEnrich-top1'], [', '.join(self.keggEnrich_top5), self.pathway])
 				else:
 					if self.pathway:
-						self.text_replace(p, ['KeggEnrich-top5等重要通路发生了显著变化', 'KeggEnrich-top1'], ['该比较组没有P值小于0.05的显著性富集通路', self.pathway])
+						self.text_replace(p, ['KeggEnrich-top5等重要通路发生了显著变化', 'KeggEnrich-top1'], ['该比较组无P值小于0.05的显著性富集通路', self.pathway])
 			if 'Percentage' in p.text:
 				self.text_replace(p, ['Percentage', 'Median Score'], [self.percentage, self.medianScore])
 			if 'groupNum' in p.text:
@@ -508,9 +522,15 @@ class Template:
 			if '[Phospho_STY_Distribution]' in p.text:
 				self.insert_png(p, '[Phospho_STY_Distribution]', os.path.join('Evaluation', 'Phospho_STY_Distribution.png'))
 			if '[inner1_venn]' in p.text:
-				self.insert_png(p, '[inner1_venn]', os.path.join('Evaluation', 'Venn', '组内', f'venn_Pro_{self.groupvs.split("_vs_")[0]}.png'))
+				is_replace = self.insert_png(p, '[inner1_venn]', os.path.join('Evaluation', 'Venn', '组内', f'venn_Pro_{self.groupvs.split("_vs_")[0]}.png'))
+				if is_replace == False:
+					p.clear()
+					self.paragraph_format(p.add_run('该项目无法进行韦恩图绘制'), size = 10.5, family = u'微软雅黑')
 			if '[inner2_venn]' in p.text:
-				self.insert_png(p, '[inner2_venn]', os.path.join('Evaluation', 'Venn', '组内', f'venn_Pep_{self.groupvs.split("_vs_")[0]}.png'))
+				is_replace = self.insert_png(p, '[inner2_venn]', os.path.join('Evaluation', 'Venn', '组内', f'venn_Pep_{self.groupvs.split("_vs_")[0]}.png'))
+				if is_replace == False:
+					p.clear()
+					self.paragraph_format(p.add_run('该项目无法进行韦恩图绘制'), size = 10.5, family = u'微软雅黑')
 			if '[all_pro_venn]' in p.text:
 				if os.path.exists(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')):
 					pro_venn_file = [i for i in os.listdir(os.path.join('Evaluation', 'Venn', '组间', 'ProteinVenn')) if re.search('png', i)]

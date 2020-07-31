@@ -8,7 +8,7 @@
 
 项目类型参数(l：labfree; i：Itraq; t：TMT; d：DIA; pl：磷酸化Labfree; gl:泛素化labfree;
 			nl:糖基化labfree; sl:琥珀酰化labfree; yl:络氨酸磷酸化labfree; al:乙酰化labfree; ml:丙二酰化labfree;
-			pt：磷酸化TMT; at：乙酰化TMT)
+			pt：磷酸化TMT; at：乙酰化TMT; ipi:蛋白磷酸化联合)
 
 注：可执行 python ProReport.py --help查看帮助
 
@@ -17,3 +17,5 @@
 若 pip install -r requirements.txt 安装失败，可单独安装各模块，例如：
 安装 win32com 命令
 python -m pip install pypiwin32
+
+若报关于 future_fstrings 的语法错误，执行 pip3 install future_fstrings即可。

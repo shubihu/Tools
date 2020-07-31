@@ -1,12 +1,13 @@
 # -*- coding: future_fstrings -*-     # should work even without -*-
+
 import os
 import sys
 import click
 from docx import Document
-from templatePy.get_version import get_version
-from templatePy.get_version import update
+from templatePy.update import get_version
+from templatePy.update import update
 
-version = 1.12
+version = 1.16
 newversion = get_version()
 
 if version < newversion:
@@ -161,7 +162,8 @@ def ipi(*args):
 @click.command()
 @click.option("--input_path", '-i', required=True, help="项目路径")
 @click.option("--types", '-t', required=True, help='''项目类型, l：labfree; i：Itraq; t：TMT; d：DIA; pl：磷酸化Labfree; gl:泛素化labfree;
-				nl:糖基化labfree; sl:琥珀酰化labfree; yl:络氨酸磷酸化labfree; al:乙酰化labfree; ml:丙二酰化labfree; pt：磷酸化TMT; at：乙酰化TMT''')
+				nl:糖基化labfree; sl:琥珀酰化labfree; yl:络氨酸磷酸化labfree; al:乙酰化labfree; ml:丙二酰化labfree; pt：磷酸化TMT; 
+				at：乙酰化TMT; ipi:蛋白磷酸化联合''')
 @click.option('--nobioinfo/--no-nobioinfo', '-y/-n', default=False, help='是否出无生信版报告，默认为否')
 def main(input_path, types, nobioinfo):
 	if nobioinfo:

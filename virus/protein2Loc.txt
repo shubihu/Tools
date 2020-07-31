@@ -1,0 +1,135 @@
+Protein ID	SubLocations
+IME537CW_3	Host cytoplasm
+IME537CW_10	Host cytoplasm
+IME537CW_28	Host cytoplasm
+IME537CW_30	Host cytoplasm
+IME537CW_54	Host cytoplasm
+IME537CW_58	Host cell membrane; Host cytoplasm; Host nucleus
+IME537CW_60	Host endoplasmic reticulum; Host cytoplasm
+IME537CW_61	Host cytoplasm
+IME537CW_65	Host cytoplasm; Host nucleus
+IME537CW_68	Host cytoplasm; Host nucleus
+IME537CW_76	Host cytoplasm
+IME537CW_77	Host cytoplasm
+IME537CW_78	Host cytoplasm
+IME537CW_80	Host cytoplasm
+IME537CW_83	Host cytoplasm
+IME537CW_89	Host nucleus
+IME537CW_101	Host cytoplasm
+IME537CW_103	Host cytoplasm
+IME537CW_105	Host cytoplasm
+IME537CW_107	Host cytoplasm
+IME537CW_126	Host cytoplasm
+IME537CW_128	Host cytoplasm
+IME537CW_131	Host cytoplasm
+IME537CW_141	Host cytoplasm
+IME537CW_143	Viral capsid
+IME537CW_152	Host nucleus
+IME537CW_153	Host cytoplasm
+IME537CW_166	Host cytoplasm
+IME537CW_170	Host cytoplasm
+IME537CW_177	Host cytoplasm
+IME537CW_178	Host cell membrane; Host cytoplasm
+IME537CW_189	Host cytoplasm
+IME537CW_190	Host cell membrane
+IME537CW_197	Host cytoplasm
+IME537CW_200	Host endoplasmic reticulum; Host cytoplasm; Host nucleus
+IME537CW_292	Host cell membrane; Host cytoplasm
+IME537CW_299	Viral capsid
+IME537CW_301	Secreted
+IME537CW_308	Host cytoplasm
+IME537CW_316	Host cytoplasm
+IME537CW_317	Host cytoplasm
+IME537CW_326	Host cytoplasm
+IME537CW_329	Host cytoplasm
+IME537CW_336	Host cytoplasm
+IME537CW_342	Host cytoplasm
+IME537CW_353	Host cytoplasm
+IME537CW_358	Host cytoplasm
+IME537CW_366	Host cytoplasm
+IME537CW_368	Host cytoplasm
+IME537CW_389	Host cytoplasm
+IME537CW_390	Host cytoplasm
+IME537CW_400	Host cytoplasm
+IME537CW_403	Host cytoplasm
+IME537CW_404	Host cytoplasm
+IME537CW_406	Host cytoplasm
+IME537CW_407	Host cytoplasm
+IME537CW_420	Host cytoplasm
+IME537CW_421	Host cytoplasm
+IME537CW_424	Host cytoplasm
+IME537CW_425	Host cytoplasm
+IME537CW_428	Host cytoplasm
+IME537CW_438	Host cytoplasm
+IME537CW_439	Host cytoplasm
+IME537CW_460	Host cell membrane; Host cytoplasm
+IME537CW_467	Host cytoplasm
+IME537CW_468	Viral capsid
+IME537CW_475	Host cytoplasm
+IME537CW_478	Host cytoplasm
+IME537CW_491	Host cytoplasm
+IME537CW_503	Host cytoplasm
+IME537CW_507	Host cytoplasm
+IME537CW_511	Host cytoplasm
+IME537CW_518	Host cytoplasm
+IME537CW_527	Host nucleus
+IME537CW_528	Host cytoplasm
+IME537CW_535	Host cytoplasm
+IME537CW_549	Host cytoplasm
+IME537CW_551	Host cytoplasm
+IME537CW_553	Host cytoplasm
+IME537CW_558	Host cytoplasm
+IME537CW_559	Host cytoplasm
+IME537CW_569	Host cytoplasm
+IME537CW_571	Host cytoplasm
+IME537CW_578	Host cytoplasm
+IME537CW_579	Host cytoplasm
+IME540CW_10	Host cytoplasm
+IME540CW_21	Host cytoplasm
+IME540CW_29	Host cytoplasm
+IME540CW_30	Host cytoplasm
+IME540CW_33	Host cytoplasm
+IME540CW_34	Host nucleus
+IME540CW_36	Host cytoplasm
+IME540CW_38	Host cytoplasm; Host nucleus
+IME540CW_40	Host cytoplasm
+IME540CW_47	Host cytoplasm
+IME540CW_48	Host cytoplasm
+IME540CW_49	Host nucleus
+IME540CW_50	Host cytoplasm
+IME540CW_52	Host cytoplasm
+IME540CW_53	Host cytoplasm
+IME540CW_54	Host cytoplasm
+IME540CW_64	Host cytoplasm
+IME540CW_69	Host cell membrane
+IME540CW_70	Host cytoplasm
+IME540CW_71	Host cytoplasm
+IME540CW_76	Host cell membrane; Host cytoplasm
+IME540CW_85	Host cytoplasm
+IME540CW_93	Host cytoplasm
+IME540CW_94	Host cytoplasm
+IME540CW_95	Host cytoplasm
+IME540CW_107	Host cytoplasm
+IME540CW_110	Host cytoplasm
+IME540CW_111	Host cytoplasm
+IME540CW_118	Host cytoplasm
+IME540CW_121	Host cytoplasm
+IME540CW_122	Host cytoplasm
+IME540CW_123	Host cytoplasm
+IME540CW_146	Host cytoplasm
+IME540CW_152	Host cytoplasm
+IME540CW_160	Host cytoplasm
+IME540CW_163	Host cytoplasm
+IME540CW_173	Host cytoplasm
+IME540CW_176	Viral capsid
+IME540CW_180	Host cytoplasm
+IME540CW_182	Host cytoplasm
+IME540CW_188	Host cytoplasm
+IME540CW_190	Host cytoplasm
+IME540CW_192	Host cytoplasm
+IME540CW_193	Host cytoplasm
+IME540CW_197	Host cytoplasm
+IME540CW_198	Host cytoplasm
+IME540CW_209	Host cytoplasm
+IME540CW_211	Host cytoplasm
+IME540CW_212	Host cytoplasm
