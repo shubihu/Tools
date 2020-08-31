@@ -16,7 +16,7 @@ def get_version():
 	client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 	client.connect(hostname, port, username, password, compress=True)
 	sftp_client = client.open_sftp()
-	remote_file = sftp_client.open("/database/metabolome/MetaReport/newversion.txt")#文件路径
+	remote_file = sftp_client.open("/database/metabolome/code_Version2/MetaReport/newversion.txt")#文件路径
 	try:
 		for line in remote_file:
 			if line.startswith('v'):
@@ -50,7 +50,7 @@ def down_from_remote(sftp, remote_dir_name, local_dir_name):
 
 def update(local_dir):
 	# 远程文件路径（需要绝对路径）
-	remote_dir = '/database/metabolome/MetaReport/'
+	remote_dir = '/database/metabolome/code_Version2/MetaReport/'
 	# 连接远程服务器
 	t = paramiko.Transport((hostname, port))
 	t.connect(username=username, password=password)

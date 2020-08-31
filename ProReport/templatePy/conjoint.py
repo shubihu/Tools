@@ -67,9 +67,9 @@ class Conjoint(Template):
 
 	def header(self, paragraphs):
 		today = str(datetime.date.today())
-		pa = paragraphs[16].add_run(self.school)
+		pa = paragraphs[16].add_run(self.project_name)
 		self.paragraph_format(pa, size=14, family=u'微软雅黑')
-		pa = paragraphs[17].add_run(self.project_name)
+		pa = paragraphs[17].add_run(self.school)
 		self.paragraph_format(pa, size=14, family=u'微软雅黑')
 		pa = paragraphs[18].add_run(self.project_num)
 		self.paragraph_format(pa, size=14, family=u'微软雅黑')

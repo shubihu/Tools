@@ -78,6 +78,9 @@ class Template:
 		# index_list[index_list.index(groupvs[0])] = '比较组'
 		# self.projectinfo.index = index_list
 
+		self.project = self.projectinfo.loc['项目名称'][1]
+		self.school = self.projectinfo.loc['委托单位'][1]
+		self.projectNum = self.projectinfo.loc['项目编号'][1]
 		self.species = self.projectinfo.loc['物种'][1]
 		self.groupvs = str(self.projectinfo.loc[groupvs[0]][1])
 		self.database = self.projectinfo.loc['数据库'][1]
@@ -240,11 +243,11 @@ class Template:
 
 	def header(self, paragraphs, start_row=10):
 		today = str(datetime.date.today())
-		pa = paragraphs[start_row].add_run(self.projectinfo.loc['项目名称'][1])
+		pa = paragraphs[start_row].add_run(self.project)
 		self.paragraph_format(pa, size=14, family=u'微软雅黑', bold=True)
-		pa = paragraphs[start_row + 1].add_run(self.projectinfo.loc['委托单位'][1])
+		pa = paragraphs[start_row + 1].add_run(self.school)
 		self.paragraph_format(pa, size=14, family=u'微软雅黑', bold=True)
-		pa = paragraphs[start_row + 2].add_run(self.projectinfo.loc['项目编号'][1])
+		pa = paragraphs[start_row + 2].add_run(self.projectNum)
 		self.paragraph_format(pa, size=14, family="Arial", bold=True) #### family = 'Calibri'
 		pa = paragraphs[start_row + 3].add_run(today)
 		self.paragraph_format(pa, size=14, family="Arial", bold=True)

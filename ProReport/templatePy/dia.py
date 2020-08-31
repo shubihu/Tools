@@ -68,9 +68,9 @@ class DIA(Template):
 
 	def header(self, paragraphs):
 		today = str(datetime.date.today())
-		pa = paragraphs[10].add_run(self.school)
+		pa = paragraphs[10].add_run(self.project_name)
 		self.paragraph_format(pa, size=12, family=u'微软雅黑')
-		pa = paragraphs[11].add_run(self.project_name)
+		pa = paragraphs[11].add_run(self.school)
 		self.paragraph_format(pa, size=12, family=u'微软雅黑')
 		pa = paragraphs[12].add_run(self.project_num)
 		self.paragraph_format(pa, size=12, family=u'微软雅黑')
@@ -173,8 +173,10 @@ class DIA(Template):
 			if "[Volcano_Plot.png]" in p.text:
 				self.insert_png(p, "[Volcano_Plot.png]", os.path.join('Volcano', f'Volcano_Plot_{self.groupvs}.png'))
 			if "[venn.png]" in p.text:
-				replace = self.insert_png(p, "[venn.png]", os.path.join('Venn', 'Venn.png'))
-				if replace == False:
+				venn_file = [i for i in os.listdir('Venn') if re.search('venn.*png', i, re.I)]
+				if venn_file:
+					self.insert_png(p, "[venn.png]", os.path.join('Venn', venn_file[0]))
+				else:
 					self.text_replace(p, ["[venn.png]"],['无venn图'], family_ch=u'微软雅黑', family_en='微软雅黑')
 			if '[Ratio_Distribution]' in p.text:
 				self.insert_png(p, '[Ratio_Distribution]', os.path.join('Ratio_distribution', f'Ratio_Distribution_{self.groupvs}.png'))

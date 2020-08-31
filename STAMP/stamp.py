@@ -57,9 +57,6 @@ def plot(path):
 	for vs in os.listdir(path):
 		if vs.count('_vs_') == 1:
 			g1, g2 = vs.split('_vs_')
-
-			# g1_sample = [i for i in df.columns if '_'.join(i.split('_')[:-1]) == g1]
-			# g2_sample = [i for i in df.columns if '_'.join(i.split('_')[:-1]) == g2]
 			g1_sample = sample_info[sample_info['Group'] == g1]['SampleID'].tolist()
 			g2_sample = sample_info[sample_info['Group'] == g2]['SampleID'].tolist()
 			g1_df = df[g1_sample]
@@ -91,7 +88,6 @@ def plot(path):
 					f.write('该比较组无差异')
 		elif vs.count('_vs_') > 1:
 			g_list = vs.split('_vs_')
-			# g_sample = [i for i in df.columns if '_'.join(i.split('_')[:-1]) in g_list]
 			g_sample = sample_info[sample_info['Group'].isin(g_list)]['SampleID'].tolist()
 			data = df[g_sample]
 			newdf = pd.DataFrame()
@@ -99,7 +95,6 @@ def plot(path):
 			for i in range(df.shape[0]):
 				tmp_df = pd.DataFrame()
 				tmp_df['value'] = data.iloc[i]
-				# tmp_df['group'] = ['_'.join(i.split('_')[:-1]) for i in data.columns]
 				tmp_df['group'] = sample_info[sample_info['Group'].isin(g_list)]['Group'].tolist()
 
 				g_values = [np.array(tmp_df[tmp_df['group'] == g]['value']) for g in g_list]

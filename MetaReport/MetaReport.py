@@ -7,11 +7,11 @@ from docx import Document
 from templatePy.update import get_version
 from templatePy.update import update
 
-version = 1.00
+version = 1.04
 newversion = get_version()
 
 if version < newversion:
-	print('服务器上发现最新版本，开始下载更新代码。\n服务器(192.168.130.252)上代码地址：/database/metabolome/MetaReport')
+	print('服务器上发现最新版本，开始下载更新代码。\n服务器(192.168.130.252)上代码地址：/database/metabolome/code_Version2/MetaReport')
 	update(os.path.abspath(os.path.dirname(sys.argv[0])))
 	exit()
 

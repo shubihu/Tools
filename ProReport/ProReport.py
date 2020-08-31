@@ -7,7 +7,7 @@ from docx import Document
 from templatePy.update import get_version
 from templatePy.update import update
 
-version = 1.16
+version = 1.17
 newversion = get_version()
 
 if version < newversion:
