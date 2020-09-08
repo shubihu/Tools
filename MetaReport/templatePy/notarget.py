@@ -27,7 +27,7 @@ class Notarget(Template):
 		self.school = self.projectinfo['客户名称'][0]
 		self.project_num = self.projectinfo['样品编号'][0]
 		with open('groupvs.txt') as g:
-			self.groupvs = g.readline().strip()
+			self.groupvs = g.readline().strip().replace('|', '_')
 
 		self.sample_info = pd.read_excel('information.xlsx')
 
@@ -63,13 +63,21 @@ class Notarget(Template):
 
 		pos_diff = pd.read_excel(os.path.join('报告及附件', '附件2 Result', '03. Difference Analysis', 'Differential Metabolites', '附件1_样本POS_定性.xlsx'))
 		pos_diff = pos_diff[pos_diff['Name'].notnull()]
-		pos_diff1 = pos_diff[(pos_diff['VIP'] > 1) & (pos_diff['p-value'] < 0.05)]
-		pos_diff2 = pos_diff[(pos_diff['VIP'] > 1) & (pos_diff['p-value'] >= 0.05) & (pos_diff['p-value'] < 0.1)]
+		if 'VIP' in pos_diff.columns:
+			pos_diff1 = pos_diff[(pos_diff['VIP'] > 1) & (pos_diff['p-value'] < 0.05)]
+			pos_diff2 = pos_diff[(pos_diff['VIP'] > 1) & (pos_diff['p-value'] >= 0.05) & (pos_diff['p-value'] < 0.1)]
+		else:
+			pos_diff1 = pos_diff[(pos_diff['ANOVA p value'] < 0.05)]
+			pos_diff2 = pos_diff[(pos_diff['ANOVA p value'] >= 0.05) & (pos_diff['ANOVA p value'] < 0.1)]
 		pos_diff_meta = set(i for i in pos_diff1['Name'])
 		neg_diff = pd.read_excel(os.path.join('报告及附件', '附件2 Result', '03. Difference Analysis', 'Differential Metabolites', '附件1_样本NEG_定性.xlsx'))
 		neg_diff = neg_diff[neg_diff['Name'].notnull()]
-		neg_diff1 = neg_diff[(neg_diff['VIP'] > 1) & (neg_diff['p-value'] < 0.05)]
-		neg_diff2 = neg_diff[(neg_diff['VIP'] > 1) & (neg_diff['p-value'] >= 0.05) & (neg_diff['p-value'] < 0.1)]
+		if 'VIP' in neg_diff.columns:
+			neg_diff1 = neg_diff[(neg_diff['VIP'] > 1) & (neg_diff['p-value'] < 0.05)]
+			neg_diff2 = neg_diff[(neg_diff['VIP'] > 1) & (neg_diff['p-value'] >= 0.05) & (neg_diff['p-value'] < 0.1)]
+		else:
+			neg_diff1 = neg_diff[(neg_diff['ANOVA p value'] < 0.05)]
+			neg_diff2 = neg_diff[(neg_diff['ANOVA p value'] >= 0.05) & (neg_diff['ANOVA p value'] < 0.1)]
 		neg_diff_meta = set(i for i in neg_diff1['Name'])
 		diff_total = pos_diff_meta | neg_diff_meta
 
@@ -88,39 +96,56 @@ class Notarget(Template):
 		self.paragraph_format(table3.cell(2,1).paragraphs[0].add_run(str(len(self.neg_meta))), size = 10.5, family = 'Arial')
 
 		pca = pd.read_excel(os.path.join('统计分析', 'pic_PCA.xlsx'))
+		pca['Group'] = pca['Group'].apply(lambda x: str(x).replace('|', '_'))
 		pos_pca = pca[(pca['Group'] == self.groupvs) & (pca['Polarity'] == 'pos')]
 		pos_pca.drop('Polarity', axis=1, inplace=True)
 		neg_pca = pca[(pca['Group'] == self.groupvs) & (pca['Polarity'] == 'neg')]
 		neg_pca.drop('Polarity', axis=1, inplace=True)
 		self.insert_table(pos_pca, tables[3], size=12, family_en='Times New Roman')
 		self.insert_table(neg_pca, tables[4], size=12, family_en='Times New Roman')
-
-		plsda = pd.read_excel(os.path.join('统计分析', 'pic_PLSDA.xlsx'))
-		pos_plsda = plsda[(plsda['Group'] == self.groupvs) & (plsda['Polarity'] == 'pos')]
-		pos_plsda.drop(['Polarity', 'N'], axis=1, inplace=True)
-		neg_plsda = plsda[(plsda['Group'] == self.groupvs) & (plsda['Polarity'] == 'neg')]
-		neg_plsda.drop(['Polarity', 'N'], axis=1, inplace=True)
-		self.insert_table(pos_plsda, tables[5], size=12, family_en='Times New Roman')
-		self.insert_table(neg_plsda, tables[6], size=12, family_en='Times New Roman')
-
-		oplsda = pd.read_excel(os.path.join('统计分析', 'pic_OPLSDA.xlsx'))
-		pos_oplsda = oplsda[(oplsda['Group'] == self.groupvs) & (oplsda['Polarity'] == 'pos')]
-		pos_oplsda.drop(['Polarity', 'N'], axis=1, inplace=True)
-		neg_oplsda = oplsda[(oplsda['Group'] == self.groupvs) & (oplsda['Polarity'] == 'neg')]
-		neg_oplsda.drop(['Polarity', 'N'], axis=1, inplace=True)
-		self.insert_table(pos_oplsda, tables[7], size=12, family_en='Times New Roman')
-		self.insert_table(neg_oplsda, tables[8], size=12, family_en='Times New Roman')
+		
+		if os.path.exists(os.path.join('统计分析', 'pic_PLSDA.xlsx')):
+			plsda = pd.read_excel(os.path.join('统计分析', 'pic_PLSDA.xlsx'))
+			pos_plsda = plsda[(plsda['Group'] == self.groupvs) & (plsda['Polarity'] == 'pos')]
+			pos_plsda.drop(['Polarity', 'N'], axis=1, inplace=True)
+			neg_plsda = plsda[(plsda['Group'] == self.groupvs) & (plsda['Polarity'] == 'neg')]
+			neg_plsda.drop(['Polarity', 'N'], axis=1, inplace=True)
+			self.insert_table(pos_plsda, tables[5], size=12, family_en='Times New Roman')
+			self.insert_table(neg_plsda, tables[6], size=12, family_en='Times New Roman')
+		
+		if os.path.exists(os.path.join('统计分析', 'pic_OPLSDA.xlsx')):
+			oplsda = pd.read_excel(os.path.join('统计分析', 'pic_OPLSDA.xlsx'))
+			pos_oplsda = oplsda[(oplsda['Group'] == self.groupvs) & (oplsda['Polarity'] == 'pos')]
+			pos_oplsda.drop(['Polarity', 'N'], axis=1, inplace=True)
+			neg_oplsda = oplsda[(oplsda['Group'] == self.groupvs) & (oplsda['Polarity'] == 'neg')]
+			neg_oplsda.drop(['Polarity', 'N'], axis=1, inplace=True)
+			self.insert_table(pos_oplsda, tables[7], size=12, family_en='Times New Roman')
+			self.insert_table(neg_oplsda, tables[8], size=12, family_en='Times New Roman')
 
 		def diff_func(df1, df2, table):
-			colname = ['adduct', 'Name', 'VIP', 'Fold change', 'p-value', 'm/z', 'rt(s)']
-			df1 = df1[colname]
-			df1.iloc[:, [2, 3, 5]] = df1.iloc[:, [2, 3, 5]].apply(lambda x: round(x, 2))
-			df1.iloc[:, [4, 6]] = df1.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
-			df1.loc[''] = ''
+			if 'VIP' in df1.columns:
+				colname = ['adduct', 'Name', 'VIP', 'Fold change', 'p-value', 'm/z', 'rt(s)']
+				df1 = df1[colname]
+				df1.iloc[:, [2, 3, 5]] = df1.iloc[:, [2, 3, 5]].apply(lambda x: round(x, 2))
+				df1.iloc[:, [4, 6]] = df1.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
+				df1.loc[''] = ''
+				df2 = df2[colname]
+				df2.iloc[:, [2, 3, 5]] = df2.iloc[:, [2, 3, 5]].apply(lambda x: round(x, 2))
+				df2.iloc[:, [4, 6]] = df2.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
+			else:
+				colname = ['adduct', 'Name', 'ANOVA p value', 'm/z', 'rt(s)']
+				df1 = df1[colname]
+				df1.insert(2, 'VIP', '' * df1.shape[1])
+				df1.insert(3, 'Fold change', '' * df1.shape[1])
+				df1.iloc[:, 5] = df1.iloc[:, 5].apply(lambda x: round(x, 2))
+				df1.iloc[:, [4, 6]] = df1.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
+				df1.loc[''] = ''
+				df2 = df2[colname]
+				df2.insert(2, 'VIP', '' * df2.shape[1])
+				df2.insert(3, 'Fold change', '' * df2.shape[1])
+				df2.iloc[:, 5] = df2.iloc[:, 5].apply(lambda x: round(x, 2))
+				df2.iloc[:, [4, 6]] = df2.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
 			self.insert_table(df1, table, size=9, family_en='Times New Roman', rgbColor='#FFFF00')
-			df2 = df2[colname]
-			df2.iloc[:, [2, 3, 5]] = df2.iloc[:, [2, 3, 5]].apply(lambda x: round(x, 2))
-			df2.iloc[:, [4, 6]] = df2.iloc[:, [4, 6]].apply(lambda x: round(x, 3))
 			self.insert_table(df2, table, size=9, family_en='Times New Roman', rgbColor='#0099CC')
 		diff_func(pos_diff1, pos_diff2, tables[9])
 		diff_func(neg_diff1, neg_diff2, tables[10])

@@ -187,6 +187,8 @@ class Template:
 				run.add_picture(png2, width=Inches(4.5))
 			return True
 		else:
+			png1_bak = png1.replace('[', '').replace(']', '')
+			self.text_replace(p, [png1], [f'no {png1_bak}'])
 			return False
 
 	def record(self, record):		
