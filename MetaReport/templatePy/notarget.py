@@ -12,7 +12,7 @@ class Notarget(Template):
 		os.chdir(path)
 		information_file = [i for i in os.listdir('.') if re.search('report.*info', i, re.I)]
 		if information_file:
-			self.projectinfo = pd.read_csv(information_file[0])
+			self.projectinfo = pd.read_csv(information_file[0], sep='\t')
 			# if 'xls' in information_file[0]:
 			# 	self.projectinfo = pd.read_excel(information_file[0], index_col=0, header=None)
 			# elif information_file[0].endswith('csv'):
