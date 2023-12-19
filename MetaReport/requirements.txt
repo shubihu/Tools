@@ -1,6 +1,6 @@
 pywin32==301
 click==7.1.1
 pandas==1.0.1
-paramiko==2.7.1
+paramiko==3.4.0
 python_docx==0.8.10
 future_fstrings
